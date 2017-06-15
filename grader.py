@@ -1,10 +1,10 @@
 
 class Grader:
 	def __init__(self, grade, letterGrade):
-        self.grade = grade
-        self.letterGrade = letterGrade
-
-    def gradesScore(self):
+		self.grade = grade
+		self.letterGrade = letterGrade
+	
+	def gradesScore(self):
   
 		if (grade > 90):
 			letterGrade = 'A'
@@ -17,7 +17,7 @@ class Grader:
 		else:
 			letterGrade = 'F'
 
-	return letterGrade
-		
+		return letterGrade
+
 
 
