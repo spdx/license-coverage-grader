@@ -86,11 +86,6 @@ def setup():
         local('pip install -r requirements.txt')
 
 @task
-def hello(who="world"):
-    """Hello world"""
-    print("Hello {who}!".format(who=who))
-
-@task
 def analyse(package=""):
     """Analyse a source file package"""
     with introduce("Analysing the source package: "):
