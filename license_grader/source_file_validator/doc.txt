@@ -1,0 +1,8 @@
+This application checks and validates Source files.
+
+INPUTS:
+- Source package / file
+
+OUTPUTS:
+- All what cloc outputs
+- In xml format
