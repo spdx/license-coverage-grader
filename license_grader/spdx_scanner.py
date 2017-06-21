@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from django.shortcuts import render
-
-# Create your views here.
 #!/usr/bin/python
 
 from __future__ import print_function
@@ -42,7 +36,7 @@ def read_spdx(filename, spdx):
                 parts = line.split(":", 2)
                 if parts[1].strip() == 'Tool':
                     spdx.parser = parts[2].strip()
-
+            
             if key == 'FileName':
                 if (fname):
                     spdx.filerefs[fname] = fdata
@@ -55,7 +49,7 @@ def read_spdx(filename, spdx):
                 if lic == 'NONE':
                     lic = 'NOASSERTION'
                 fdata.concluced = lic
-
+                
             if key == 'LicenseInfoInFile':
                 lic = parts[1].strip()
                 if lic == 'NONE':
@@ -66,15 +60,15 @@ def read_spdx(filename, spdx):
         if fname:
             spdx.filerefs[fname] = fdata
 
-# LID CSV scan
+# LID CSV scan            
 def read_csv(filename, spdx):
 
     spdx.parser = 'LID'
-
+    
     with open(filename) as f:
         rdr = csv.reader(f)
         i = 0
-
+        
         for row in rdr:
             i += 1
             if i == 1:
@@ -87,7 +81,7 @@ def read_csv(filename, spdx):
             if lic not in fd.licinfo:
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
-
+            
 def diff_spdx(spdxfiles, totfiles, windcrap):
 
     spdx = {}
@@ -101,14 +95,14 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
             read_spdx(spf, s)
         else:
             read_csv(spf, s)
-
+            
         s.files = set(sorted(s.filerefs.keys()))
         files = files | s.files
         spdx[spf] = s
         t += "," + s.parser + ":%d" %(len(s.files))
 
     t += ",Match"
-
+        
     print(t)
 
     if windcrap:
@@ -128,7 +122,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
 
                 if len(src) - len(crap) != 1:
                     continue
-
+            
                 ops = lev.opcodes(src, crap)
                 if len(ops) != 3:
                     continue
@@ -147,7 +141,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                 sanitize[crap] = src
 
             files = set()
-            sanset = set(sanitize.keys())
+            sanset = set(sanitize.keys())        
             for spf in spdxfiles:
                 s = spdx[spf]
                 for crap in sanset & s.files:
@@ -157,7 +151,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                     s.filerefs[src] = ref
                 s.files = set(sorted(s.filerefs.keys()))
                 files = files | s.files
-
+            
     for src in sorted(files):
         info = src
         lics = None
@@ -183,11 +177,12 @@ if __name__ == '__main__':
                     help="Number of files in the source")
     parser.add_argument("-w", "--windcrap", action='store_true',
                     help="Sanitize windrivel filenames")
-
+   
     args = parser.parse_args()
 
     if len(args.filenames) < 1:
         print("Not enough SPDX files\n")
         sys.exit(1)
-
+    
     diff_spdx(args.filenames, args.sourcefiles, args.windcrap)
+    
