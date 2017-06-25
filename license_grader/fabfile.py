@@ -94,8 +94,8 @@ def setup():
 def analyse(package=""):
     """Analyse a source file package USAGE: fab analyse:<source_file_or_package>"""
     with introduce("Analysing the source package: "):
-        cloc_command_result = local('cloc --xml --ignored=ignored.txt {package}'.format(package=package), capture=True)
-
+        cloc_command_result = local('cloc --xml {package}'.format(package=package), capture=True)
+        print(cloc_command_result)
 
 @task
 def scan(spdx_file=""):
@@ -111,6 +111,7 @@ def scan(spdx_file=""):
                     x.license_info(val=single_line[1])
                     x.license_concluded(val=single_line[2])
                 etree_node = ~x
+        print(str(x))
 
 def combine_xml(files):
     first = None
