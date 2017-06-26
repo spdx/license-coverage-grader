@@ -42,8 +42,6 @@ Install them by running:
 This is just for safety, because before each command of the project is run (spdx document scan or pacakge analysis), these requirements are checked for installation if need be.
 So, one could skip this step and start using the project right away.
 
-> Comming soon: spdx file scan commands and package analysis commands documentation
-
 ## Available terminal commands / functions
 
 Requirement:
