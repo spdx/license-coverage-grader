@@ -18,6 +18,7 @@ import time
 from fabric.api import env, local, task, warn_only
 from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
+from xml.etree import ElementTree as et
 # Launch tasks here.
 
 IS_WIN = platform.system().lower().startswith("win")
@@ -93,22 +94,46 @@ def setup():
 def analyse(package=""):
     """Analyse a source file package USAGE: fab analyse:<source_file_or_package>"""
     with introduce("Analysing the source package: "):
-        setup()
         cloc_command_result = local('cloc --xml {package}'.format(package=package), capture=True)
         print(cloc_command_result)
-
 
 @task
 def scan(spdx_file=""):
     """Scan an spdx document USAGE: fab scan:<spdx_source_file_or_link> """
     with introduce("Scanning the spdx file: "):
-        setup()
-        spdx_scan_result = local('python spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
-        x = XMLBuilder('root')
+        spdx_scan_result = local('python -s spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
+        x = XMLBuilder('spdx_file')
         with x.data:
             for line in spdx_scan_result.splitlines():
                 single_line = line.split(',')
-                x.file(val=single_line[0])
-                x.license_info(val=single_line[1])
+                with x.item:
+                    x.file(val=single_line[0])
+                    x.license_info(val=single_line[1])
+                    x.license_concluded(val=single_line[2])
                 etree_node = ~x
         print(str(x))
+
+def combine_xml(files):
+    first = None
+    for filename in files:
+        # data = et.parse(filename).getroot()
+        data = filename
+        if first is None:
+            first = data
+        else:
+            first.extend(data)
+        print(data)
+    if first is not None:
+        return et.tostring(first)
+
+@task
+def cover(spdx_file="", package=""):
+    """Analyse package and scan an spdx document"""
+    with introduce("Analyse and scan"):
+        setup()
+        spdx_scan_results = scan(spdx_file=spdx_file)
+        package_analysis_results = analyse(package=package)
+        # Merge the two results
+        # combined_results = combine_xml([spdx_scan_results, package_analysis_results])
+        # print(combined_results)
+        print(type(spdx_scan_results), type(package_analysis_results))

@@ -16,12 +16,14 @@ class spdxdata(object):
         self.files = set()
 
 class filedata(object):
-    def __init__(self, fname, info=None):
+    def __init__(self, fname, info=None, concluded=None):
         self.fname = fname
         self.licinfo = []
-        self.concluded = ""
+        self.licconcluded = []
         if info:
             self.licinfo.append(info)
+        if concluded:
+            self.licconcluded.append(concluded)
 
 # Trivial SPDX scan
 def read_spdx(filename, spdx):
@@ -36,7 +38,7 @@ def read_spdx(filename, spdx):
                 parts = line.split(":", 2)
                 if parts[1].strip() == 'Tool':
                     spdx.parser = parts[2].strip()
-            
+
             if key == 'FileName':
                 if (fname):
                     spdx.filerefs[fname] = fdata
@@ -48,27 +50,27 @@ def read_spdx(filename, spdx):
                 lic = parts[1].strip()
                 if lic == 'NONE':
                     lic = 'NOASSERTION'
-                fdata.concluced = lic
-                
+                if lic not in fdata.licconcluded:
+                    fdata.licconcluded.append(lic)
+
             if key == 'LicenseInfoInFile':
                 lic = parts[1].strip()
                 if lic == 'NONE':
                     lic = 'NOASSERTION'
                 if lic not in fdata.licinfo:
                     fdata.licinfo.append(lic)
-
         if fname:
             spdx.filerefs[fname] = fdata
 
-# LID CSV scan            
+# LID CSV scan
 def read_csv(filename, spdx):
 
     spdx.parser = 'LID'
-    
+
     with open(filename) as f:
         rdr = csv.reader(f)
         i = 0
-        
+
         for row in rdr:
             i += 1
             if i == 1:
@@ -81,7 +83,7 @@ def read_csv(filename, spdx):
             if lic not in fd.licinfo:
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
-            
+
 def diff_spdx(spdxfiles, totfiles, windcrap):
 
     spdx = {}
@@ -95,14 +97,14 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
             read_spdx(spf, s)
         else:
             read_csv(spf, s)
-            
+
         s.files = set(sorted(s.filerefs.keys()))
         files = files | s.files
         spdx[spf] = s
         t += "," + s.parser + ":%d" %(len(s.files))
 
     t += ",Match"
-        
+
     print(t)
 
     if windcrap:
@@ -122,7 +124,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
 
                 if len(src) - len(crap) != 1:
                     continue
-            
+
                 ops = lev.opcodes(src, crap)
                 if len(ops) != 3:
                     continue
@@ -141,7 +143,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                 sanitize[crap] = src
 
             files = set()
-            sanset = set(sanitize.keys())        
+            sanset = set(sanitize.keys())
             for spf in spdxfiles:
                 s = spdx[spf]
                 for crap in sanset & s.files:
@@ -151,23 +153,23 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                     s.filerefs[src] = ref
                 s.files = set(sorted(s.filerefs.keys()))
                 files = files | s.files
-            
     for src in sorted(files):
         info = src
         lics = None
         match = "Y"
         for spf in spdxfiles:
-            li = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED')).licinfo
+            l = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licinfo
+            lico = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licconcluded
             if not lics:
-                lics = copy.copy(li)
-            elif set(lics) != set(li):
+                lics = copy.copy(l)
+            elif set(lics) != set(l):
                 match = "N"
-
-            info += "," + li.pop()
-            for l in li:
-                info += " " + l
-
-        print(info + "," + match)
+            if not lics:
+                lics = copy.copy(lico)
+            elif set(lics) != set(lico):
+                match = "N"
+            info = "," + " ".join(map(str,l)) + "," + " ".join(map(str,lico))
+        print(src + info)
 
 if __name__ == '__main__':
     parser = ArgumentParser(description = 'Diff of two or more SPDX files')
@@ -177,12 +179,11 @@ if __name__ == '__main__':
                     help="Number of files in the source")
     parser.add_argument("-w", "--windcrap", action='store_true',
                     help="Sanitize windrivel filenames")
-   
+
     args = parser.parse_args()
 
     if len(args.filenames) < 1:
         print("Not enough SPDX files\n")
         sys.exit(1)
-    
+
     diff_spdx(args.filenames, args.sourcefiles, args.windcrap)
-    
