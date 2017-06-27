@@ -19,6 +19,7 @@ from fabric.api import env, local, task, warn_only
 from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
+from lxml import etree
 # Launch tasks here.
 
 IS_WIN = platform.system().lower().startswith("win")
@@ -91,16 +92,24 @@ def setup():
 
 
 @task
-def analyse(package=""):
+def analyse(package="", run_setup=True):
     """Analyse a source file package USAGE: fab analyse:<source_file_or_package>"""
     with introduce("Analysing the source package: "):
+        if run_setup:
+            setup()
+        # to print ignored files to a file, add --ignored=ignore.txt
         cloc_command_result = local('cloc --xml {package}'.format(package=package), capture=True)
-        print(cloc_command_result)
+        if run_setup:
+            print(cloc_command_result)
+        else:
+            return cloc_command_result
 
 @task
-def scan(spdx_file=""):
+def scan(spdx_file="", run_setup=True):
     """Scan an spdx document USAGE: fab scan:<spdx_source_file_or_link> """
     with introduce("Scanning the spdx file: "):
+        if run_setup:
+            setup()
         spdx_scan_result = local('python -s spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
         x = XMLBuilder('spdx_file')
         with x.data:
@@ -111,29 +120,21 @@ def scan(spdx_file=""):
                     x.license_info(val=single_line[1])
                     x.license_concluded(val=single_line[2])
                 etree_node = ~x
-        print(str(x))
-
-def combine_xml(files):
-    first = None
-    for filename in files:
-        # data = et.parse(filename).getroot()
-        data = filename
-        if first is None:
-            first = data
+        if run_setup:
+            print(str(x))
         else:
-            first.extend(data)
-        print(data)
-    if first is not None:
-        return et.tostring(first)
+            return str(x)
 
 @task
-def cover(spdx_file="", package=""):
+def grade(spdx_file="", package=""):
     """Analyse package and scan an spdx document"""
     with introduce("Analyse and scan"):
         setup()
-        spdx_scan_results = scan(spdx_file=spdx_file)
-        package_analysis_results = analyse(package=package)
-        # Merge the two results
-        # combined_results = combine_xml([spdx_scan_results, package_analysis_results])
-        # print(combined_results)
-        print(type(spdx_scan_results), type(package_analysis_results))
+        # No need to run setup again in each of the methods below
+        spdx_scan_results = scan(spdx_file=spdx_file, run_setup=False)
+        package_analysis_results = analyse(package=package, run_setup=False)
+        # XML strings to etree
+        spdx_scan_results_root = etree.fromstring(spdx_scan_results)
+        package_analysis_results_root = etree.fromstring(package_analysis_results.split("\n",4)[4])
+        spdx_scan_results_root.append(package_analysis_results_root)
+        print(etree.tostring(spdx_scan_results_root))
