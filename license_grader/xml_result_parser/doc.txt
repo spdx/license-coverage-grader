@@ -1,0 +1,11 @@
+This application checks and validates Source files.
+
+INPUTS:
+- Source package / file[Format: "a file", "a directory", "an archive"]
+
+OUTPUTS: FORMAT: xml
+- number of source files 
+-blank spaces in source file 
+-comment lines           
+-code count
+

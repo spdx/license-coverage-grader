@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'xml_result_parser',
+    'spdx_document_scanner',
 ]
 
 MIDDLEWARE = [
