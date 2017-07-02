@@ -1,12 +1,3 @@
-
-"""
-Fabric file to standardize our dev process.
-1. Run the dev setup with: $ fab debug. For postgres. fab debug:psql
-2. Run the prod setup with: $ fab prod. For postgres. fab prod:psql
-3. Remember to stop the servers, with $ fab stop
-
-All Rights Reserved. Hadron Tech LLC 2016.
-"""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
@@ -20,7 +11,6 @@ from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
 from lxml import etree
-# Launch tasks here.
 
 IS_WIN = platform.system().lower().startswith("win")
 
@@ -79,6 +69,7 @@ def introduce(what):
         else:
             warn(what + timer())
 
+
 @task
 def setup():
     # Sets up the project, installs the necessary utilities so that commands do not fail
@@ -87,8 +78,6 @@ def setup():
         local('sudo apt-get install cloc')
     with introduce("Checking and installing requriements: "):
         local('pip install -r requirements.txt')
-    with introduce("Check for libxml installation"):
-        local('pip install xmlbuilder')
 
 
 @task
@@ -103,6 +92,7 @@ def analyse(package="", run_setup=True):
             print(cloc_command_result)
         else:
             return cloc_command_result
+
 
 @task
 def scan(spdx_file="", run_setup=True):
@@ -124,6 +114,7 @@ def scan(spdx_file="", run_setup=True):
             print(str(x))
         else:
             return str(x)
+
 
 @task
 def grade(spdx_file="", package=""):
