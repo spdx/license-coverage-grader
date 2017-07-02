@@ -11,6 +11,7 @@ from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
 from lxml import etree
+from xml_result_parser.views import parse_xml_results
 
 IS_WIN = platform.system().lower().startswith("win")
 
@@ -128,4 +129,5 @@ def grade(spdx_file="", package=""):
         spdx_scan_results_root = etree.fromstring(spdx_scan_results)
         package_analysis_results_root = etree.fromstring(package_analysis_results.split("\n",4)[4])
         spdx_scan_results_root.append(package_analysis_results_root)
-        print(etree.tostring(spdx_scan_results_root))
+        results_string = etree.tostring(spdx_scan_results_root)
+        parse_xml_results(results_string)
