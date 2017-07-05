@@ -21,7 +21,8 @@ def parse_xml_results(xml_string):
     results_dict = {
     'num_license_concluded': 0,
     'num_license_possible': 0,
-    'num_file_with_license': 0
+    'total_num_files': 0,
+    'total_num_files_with_license': 0
     }
     # Open XML document
     DOMTree = xml.dom.minidom.parseString(xml_string)
@@ -30,10 +31,14 @@ def parse_xml_results(xml_string):
        print "Root element : %s" % collection.getAttribute("shelf")
 
     # Get detail of each useful attribute.
-    for total in collection.getElementsByTagName("total"):
-       if total.hasAttribute("sum_files"):
-          num_source_files = total.getAttribute("sum_files")
     results_dict['num_license_concluded'] = get_xml_item_count(collection, 'license_concluded', VALUES_TO_AVOID)
     results_dict['num_license_possible'] = get_xml_item_count(collection, 'license_info', VALUES_TO_AVOID)
-    results_dict['num_file_with_license'] = get_xml_item_count(collection, 'file', [])
+    results_dict['total_num_files'] = get_xml_item_count(collection, 'file', [])
+    results_dict['total_num_files_with_license'] = get_xml_item_count(collection, 'file', VALUES_TO_AVOID)
     print(results_dict)
+
+
+#  print “%s: %c -> %c  %n source file in %n total “ file, 
+#  grade_scale(100 *num_license_concluded / num_source_files), 
+#  grade_scale (num_license_possible / num_source_files ) num_source_files, num_total_files;
+
