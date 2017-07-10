@@ -101,7 +101,7 @@ def scan(spdx_file="", run_setup=True):
     with introduce("Scanning the spdx file: "):
         if run_setup:
             setup()
-        spdx_scan_result = local('python -s spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
+        spdx_scan_result = local('python -s spdx_scanner.py -s 10571 {spdx_file}'.format(spdx_file=spdx_file), capture=True)
         x = XMLBuilder('spdx_file')
         with x.data:
             for line in spdx_scan_result.splitlines():
