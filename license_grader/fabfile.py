@@ -13,8 +13,6 @@ from xml.etree import ElementTree as et
 from lxml import etree
 from xml_result_parser.views import parse_xml_results
 
-IS_WIN = platform.system().lower().startswith("win")
-
 IS_TTY = sys.stdout.isatty()
 
 STATUS_MARK = u'\u2712' * IS_TTY
@@ -23,52 +21,44 @@ CHECK_MARK = u'\u2714' * IS_TTY
 WARNING_MARK = u"\u26A0" * IS_TTY
 NOTE_MARK = u'\u2710' * IS_TTY
 
-def W(string, prefix=" "):
-    """Returns "" if this platform is WIN."""
-    return "" if IS_WIN else prefix + string
-
 def _fprint(bg, status, message):
-    print(Fore.WHITE + Style.BRIGHT + bg + " " + status + " ", end="")
     print(Fore.WHITE + Style.BRIGHT + " " + message)
 
 
 def warn(message):
-    _fprint(Back.BLACK, "WARNING", message + W(Fore.YELLOW + WARNING_MARK))
+    _fprint(Back.BLACK, "WARNING", message + Fore.YELLOW + WARNING_MARK)
 
 
 def success(message):
-    _fprint(Back.BLACK, "SUCCESS", message + W(Fore.GREEN + CHECK_MARK))
+    _fprint(Back.BLACK, "SUCCESS", message + Fore.GREEN + CHECK_MARK)
 
 
 def note(message):
-    _fprint(Back.BLACK, " NOTE  ", message + W(Fore.CYAN + NOTE_MARK))
+    _fprint(Back.BLACK, " NOTE  ", message + Fore.CYAN + NOTE_MARK)
 
 
 def error(message):
-    _fprint(Back.BLACK, " ERROR ", message + W(Fore.RED + X_MARK))
+    _fprint(Back.BLACK, " ERROR ", message + Fore.RED + X_MARK)
 
 
 @contextmanager
-def introduce(what):
+def introduce(intro_comment):
     """Status decorate an event."""
     start_time = time.time()
     introducer_dict = {}
 
     def timer():
         return str(time.time() - start_time) + " seconds"
-
-    print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "  START  ", end="")
-    print(Fore.WHITE + Style.BRIGHT + W(STATUS_MARK) + " " + what)
     try:
         yield introducer_dict
     except:
-        error(what + timer())
+        error(intro_comment + timer())
         raise
     else:
         if not introducer_dict:
-            success(what + timer())
+            success(intro_comment + timer())
         else:
-            warn(what + timer())
+            warn(intro_comment + timer())
 
 
 @task

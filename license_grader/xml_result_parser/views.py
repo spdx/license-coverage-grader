@@ -18,6 +18,7 @@ def get_xml_item_count(collection, item, values_to_avoid):
     return item_count
 
 def parse_xml_results(xml_string):
+    print(xml_string)
     results_dict = {
     'num_license_concluded': 0,
     'num_license_possible': 0,
