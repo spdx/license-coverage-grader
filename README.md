@@ -107,3 +107,10 @@ An example output is shown below:
 </languages>
 </results>
 ```
+### 4- Grader
+`fab grade:~/path_to_spdx_document,~/path_to_package`
+This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
+```
+GRADE:  D; (33.5527862685 %)
+```
+
