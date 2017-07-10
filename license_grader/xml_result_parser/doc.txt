@@ -9,3 +9,6 @@ OUTPUTS: FORMAT: xml
 -comment lines           
 -code count
 
+
+
+fab grade:~/path/doc-source.spdx,~/path/package
