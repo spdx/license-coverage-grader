@@ -7,39 +7,10 @@ import platform
 import sys
 import time
 from fabric.api import env, local, task, warn_only
-from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
 from lxml import etree
-from xml_result_parser.views import parse_xml_results
-
-IS_TTY = sys.stdout.isatty()
-
-STATUS_MARK = u'\u2712' * IS_TTY
-X_MARK = u'\u2718' * IS_TTY
-CHECK_MARK = u'\u2714' * IS_TTY
-WARNING_MARK = u"\u26A0" * IS_TTY
-NOTE_MARK = u'\u2710' * IS_TTY
-
-def _fprint(bg, status, message):
-    print(Fore.WHITE + Style.BRIGHT + " " + message)
-
-
-def warn(message):
-    _fprint(Back.BLACK, "WARNING", message + Fore.YELLOW + WARNING_MARK)
-
-
-def success(message):
-    _fprint(Back.BLACK, "SUCCESS", message + Fore.GREEN + CHECK_MARK)
-
-
-def note(message):
-    _fprint(Back.BLACK, " NOTE  ", message + Fore.CYAN + NOTE_MARK)
-
-
-def error(message):
-    _fprint(Back.BLACK, " ERROR ", message + Fore.RED + X_MARK)
-
+from xml_result_parser.views import parse_xml_results, build_xml
 
 @contextmanager
 def introduce(intro_comment):
@@ -52,13 +23,13 @@ def introduce(intro_comment):
     try:
         yield introducer_dict
     except:
-        error(intro_comment + timer())
+        print(intro_comment + timer())
         raise
     else:
         if not introducer_dict:
-            success(intro_comment + timer())
+            print(intro_comment + timer())
         else:
-            warn(intro_comment + timer())
+            print(intro_comment + timer())
 
 
 @task
@@ -92,15 +63,7 @@ def scan(spdx_file="", run_setup=True):
         if run_setup:
             setup()
         spdx_scan_result = local('python -s spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
-        x = XMLBuilder('spdx_file')
-        with x.data:
-            for line in spdx_scan_result.splitlines():
-                single_line = line.split(',')
-                with x.item:
-                    x.file(val=single_line[0])
-                    x.license_info(val=single_line[1])
-                    x.license_concluded(val=single_line[2])
-                etree_node = ~x
+        x = build_xml(spdx_scan_result)
         if run_setup:
             print(str(x))
         else:
@@ -110,7 +73,7 @@ def scan(spdx_file="", run_setup=True):
 @task
 def grade(spdx_file="", package=""):
     """Analyse package and scan an spdx document"""
-    with introduce("Analyse and scan"):
+    with introduce("Analyse and scan: "):
         setup()
         # No need to run setup again in each of the methods below
         spdx_scan_results = scan(spdx_file=spdx_file, run_setup=False)
