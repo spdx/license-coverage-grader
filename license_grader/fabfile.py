@@ -7,68 +7,29 @@ import platform
 import sys
 import time
 from fabric.api import env, local, task, warn_only
-from colorama import Back, Fore, Style, init
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
 from lxml import etree
-from xml_result_parser.views import parse_xml_results
-
-IS_WIN = platform.system().lower().startswith("win")
-
-IS_TTY = sys.stdout.isatty()
-
-STATUS_MARK = u'\u2712' * IS_TTY
-X_MARK = u'\u2718' * IS_TTY
-CHECK_MARK = u'\u2714' * IS_TTY
-WARNING_MARK = u"\u26A0" * IS_TTY
-NOTE_MARK = u'\u2710' * IS_TTY
-
-def W(string, prefix=" "):
-    """Returns "" if this platform is WIN."""
-    return "" if IS_WIN else prefix + string
-
-def _fprint(bg, status, message):
-    print(Fore.WHITE + Style.BRIGHT + bg + " " + status + " ", end="")
-    print(Fore.WHITE + Style.BRIGHT + " " + message)
-
-
-def warn(message):
-    _fprint(Back.BLACK, "WARNING", message + W(Fore.YELLOW + WARNING_MARK))
-
-
-def success(message):
-    _fprint(Back.BLACK, "SUCCESS", message + W(Fore.GREEN + CHECK_MARK))
-
-
-def note(message):
-    _fprint(Back.BLACK, " NOTE  ", message + W(Fore.CYAN + NOTE_MARK))
-
-
-def error(message):
-    _fprint(Back.BLACK, " ERROR ", message + W(Fore.RED + X_MARK))
-
+from xml_result_parser.views import parse_xml_results, build_xml
 
 @contextmanager
-def introduce(what):
+def introduce(intro_comment):
     """Status decorate an event."""
     start_time = time.time()
     introducer_dict = {}
 
     def timer():
         return str(time.time() - start_time) + " seconds"
-
-    print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "  START  ", end="")
-    print(Fore.WHITE + Style.BRIGHT + W(STATUS_MARK) + " " + what)
     try:
         yield introducer_dict
     except:
-        error(what + timer())
+        print(intro_comment + timer())
         raise
     else:
         if not introducer_dict:
-            success(what + timer())
+            print(intro_comment + timer())
         else:
-            warn(what + timer())
+            print(intro_comment + timer())
 
 
 @task
@@ -101,6 +62,7 @@ def scan(spdx_file="", run_setup=True):
     with introduce("Scanning the spdx file: "):
         if run_setup:
             setup()
+<<<<<<< HEAD
         spdx_scan_result = local('python -s spdx_scanner.py -s 10571 {spdx_file}'.format(spdx_file=spdx_file), capture=True)
         x = XMLBuilder('spdx_file')
         with x.data:
@@ -111,6 +73,10 @@ def scan(spdx_file="", run_setup=True):
                     x.license_info(val=single_line[1])
                     x.license_concluded(val=single_line[2])
                 etree_node = ~x
+=======
+        spdx_scan_result = local('python -s spdx_scanner.py -s 10571 -w {spdx_file}'.format(spdx_file=spdx_file), capture=True)
+        x = build_xml(spdx_scan_result)
+>>>>>>> fe1ee72c1d47296e6cb10b44d0a45210693b1463
         if run_setup:
             print(str(x))
         else:
@@ -120,7 +86,7 @@ def scan(spdx_file="", run_setup=True):
 @task
 def grade(spdx_file="", package=""):
     """Analyse package and scan an spdx document"""
-    with introduce("Analyse and scan"):
+    with introduce("Analyse and scan: "):
         setup()
         # No need to run setup again in each of the methods below
         spdx_scan_results = scan(spdx_file=spdx_file, run_setup=False)
