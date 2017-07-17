@@ -111,6 +111,12 @@ An example output is shown below:
 `fab grade:~/path_to_spdx_document,~/path_to_package`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
-GRADE:  D; (33.5527862685 %)
+BRILLIANT! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
+GRADE:  A with 99.3732590529 %  pass for files_with_any_kind_of_license_infos
+GRADE:  A with 99.3732590529 %  pass for files_with_license_concluded
+Analyse and Scan: 1290.17038298 seconds
+
+Done.
+
 ```
 
