@@ -13,7 +13,7 @@ init()
 VALUES_TO_AVOID = ['NOASSERTION', 'NONE']
 SCALE = [('A', 90, Fore.GREEN), ('B', 75, Fore.BLUE), ('C', 55,
          Fore.MAGENTA), ('D', 30, Fore.YELLOW)]
-DEFAULT_CODE_LINES = 0
+DEFAULT_CODE_LINES = 10
 # Percentage value below which a link between an spdx document and a source package is deemed a fail
 
 THRESHOLD_VALUE = 80
