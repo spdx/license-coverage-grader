@@ -81,7 +81,6 @@ def parse_xml_results(xml_string):
     DOMTree = xml.dom.minidom.parseString(xml_string)
     collection = DOMTree.documentElement
 
-
     # Get detail of each useful attribute.
 
     results_dict['num_license_concluded'] = \
