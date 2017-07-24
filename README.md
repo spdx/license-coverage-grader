@@ -87,25 +87,38 @@ An example output is shown below:
 `fab analyse:~/path_to_package`
 Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
-```6 text files.
-       6 unique files.                              
-       2 files ignored.
-
+```
 <?xml version="1.0"?><results>
 <header>
   <cloc_url>http://cloc.sourceforge.net</cloc_url>
   <cloc_version>1.60</cloc_version>
-  <elapsed_seconds>0.0474860668182373</elapsed_seconds>
-  <n_files>6</n_files>
-  <n_lines>172</n_lines>
-  <files_per_second>126.352852573919</files_per_second>
-  <lines_per_second>3622.11510711901</lines_per_second>
+  <elapsed_seconds>7.50479102134705</elapsed_seconds>
+  <n_files>733</n_files>
+  <n_lines>134231</n_lines>
+  <files_per_second>97.6709408583149</files_per_second>
+  <lines_per_second>17886.0410127592</lines_per_second>
 </header>
-<languages>
-  <language name="Python" files_count="6" blank="17" comment="117" code="38" />
-  <total sum_files="6" blank="17" comment="117" code="38" />
-</languages>
+<files>
+  <file name="cadasta-platform/functional_tests/pages/Registration.py" blank="18" comment="2" code="64"  language="Python" />
+  <file name="cadasta-platform/cadasta/templates/allauth/account/email.html" blank="21" comment="0" code="64"  language="HTML" />
+  <file name="cadasta-platform/cadasta/questionnaires/views/api.py" blank="16" comment="0" code="64"  language="Python" />
+  <file name="cadasta-platform/cadasta/party/urls/default.py" blank="6" comment="0" code="64"  language="Python" />
+  <file name="cadasta-platform/htmlcov/jquery.hotkeys.js" blank="18" comment="17" code="64"  language="Javascript" />
+  <file name="cadasta-platform/cadasta/resources/tests/test_widgets.py" blank="9" comment="2" code="63"  language="Python" />
+  <file name="cadasta-platform/cadasta/templates/spatial/location_edit.html" blank="8" comment="0" code="63"  language="HTML" />
+  <file name="cadasta-platform/cadasta/core/tests/test_filters.py" blank="13" comment="0" code="63"  language="Python" />
+  <file name="cadasta-platform/cadasta/spatial/tests/test_urls_async.py" blank="4" comment="0" code="17"  language="Python" />
+  <file name="cadasta-platform/cadasta/search/tests/test_urls_async.py" blank="4" comment="0" code="17"  language="Python" />
+  <file name="cadasta-platform/cadasta/runserver" blank="3" comment="0" code="16"  language="Bourne Again Shell" />
+  <file name="cadasta-platform/cadasta/templates/allauth/account/verified_email_required.html" blank="11" comment="0" code="16"  
+  <file name="cadasta-platform/htmlcov/jquery.tablesorter.min.js" blank="1" comment="0" code="1"  language="Javascript" />
+  <file name="cadasta-platform/functional_tests/projects/test_project.py" blank="13" comment="109" code="0"  language="Python" />
+  <total blank="17175" comment="6111" code="110945" />
+</files>
 </results>
+Analysing the source package: 3.90155696869 seconds
+
+Done.
 ```
 ### 4- Grader
 `fab grade:~/path_to_spdx_document,~/path_to_package`
@@ -119,4 +132,3 @@ Analyse and Scan: 1290.17038298 seconds
 Done.
 
 ```
-
