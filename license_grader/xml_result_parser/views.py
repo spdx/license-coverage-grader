@@ -17,9 +17,17 @@ SCALE = [('A', 90, Fore.GREEN), ('B', 75, Fore.BLUE), ('C', 55,
 # Percentage value below which a link between an spdx document and a source package is deemed a fail
 
 THRESHOLD_VALUE = 80
-MSG = {True: 'Good! The spdx document and the source files match.',
-       False: 'Could not proceed because the source files do not match with the spdx document provided.'}
+MSG = {True: Fore.BLUE + 'Good! The spdx document and the source files match.',
+       False: Fore.RED + 'Could not proceed because the source files do not match with the spdx document provided.'}
 
+def progress_bar():
+    bar = progressbar.ProgressBar(maxval=20, \
+        widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+    bar.start()
+    for i in xrange(20):
+        bar.update(i+1)
+        sleep(0.1)
+    bar.finish()
 
 def get_xml_item_count(
     collection,
@@ -49,6 +57,17 @@ def get_xml_item_value(collection, tag_to_get):
     return attribute_value
 
 
+def code_line_validator(collection, file_tag, code_line_tag):
+    code_line = input("Specify the number of 'lines of code' you want to consider as valid: ")
+    num_source_file = 0
+    for file in collection.getElementsByTagName(file_tag):
+        if file.hasAttribute(code_line_tag):
+            attribute_value = file.getAttribute(code_line_tag)
+            if int(attribute_value) >= code_line:
+                num_source_file += 1
+    return num_source_file
+
+
 def parse_xml_results(xml_string):
     results_dict = {
         'num_license_concluded': 0,
@@ -61,8 +80,7 @@ def parse_xml_results(xml_string):
 
     DOMTree = xml.dom.minidom.parseString(xml_string)
     collection = DOMTree.documentElement
-    if collection.hasAttribute('shelf'):
-        print 'Root element : %s' % collection.getAttribute('shelf')
+
 
     # Get detail of each useful attribute.
 
@@ -73,7 +91,8 @@ def parse_xml_results(xml_string):
         get_xml_item_count(collection, 'license_info', VALUES_TO_AVOID,
                            'val')
     results_dict['total_num_source_files'] = \
-        get_xml_item_value(collection, 'n_files')
+        code_line_validator(collection, 'file', 'code')
+
     results_dict['total_num_files_with_license'] = \
         get_xml_item_count(collection, 'license_concluded',
                            VALUES_TO_AVOID, 'val')
@@ -116,7 +135,7 @@ def grade_scale(grade_num, gtype):
 
 
 def compute_grade(dict_of_values):
-    grade1 = 100 * (float(dict_of_values['total_num_files_with_license'
+    grade1 = 100 * (float(dict_of_values['num_license_possible'
                     ]) / float(dict_of_values['total_num_source_files'
                     ]))
     grade2 = 100 * (float(dict_of_values['num_license_concluded'])

@@ -36,10 +36,10 @@ def introduce(intro_comment):
 def setup():
     # Sets up the project, installs the necessary utilities so that commands do not fail
     """Setup the project"""
-    with introduce("Checking Cloc installation: "):
-        local('sudo apt-get install cloc')
-    with introduce("Checking and installing requriements: "):
-        local('pip install -r requirements.txt')
+    # with introduce("Checking Cloc installation: "):
+    #     local('sudo apt-get install cloc')
+    # with introduce("Checking and installing requriements: "):
+    #     local('pip install -r requirements.txt')
 
 
 @task
