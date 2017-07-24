@@ -13,7 +13,7 @@ init()
 VALUES_TO_AVOID = ['NOASSERTION', 'NONE']
 SCALE = [('A', 90, Fore.GREEN), ('B', 75, Fore.BLUE), ('C', 55,
          Fore.MAGENTA), ('D', 30, Fore.YELLOW)]
-
+DEFAULT_CODE_LINES = 0
 # Percentage value below which a link between an spdx document and a source package is deemed a fail
 
 THRESHOLD_VALUE = 80
@@ -57,18 +57,19 @@ def get_xml_item_value(collection, tag_to_get):
     return attribute_value
 
 
-def code_line_validator(collection, file_tag, code_line_tag):
-    code_line = input("Specify the number of 'lines of code' you want to consider as valid: ")
+def code_line_validator(xml_string, min_code_lines):
+    DOMTree = xml.dom.minidom.parseString(xml_string)
+    collection = DOMTree.documentElement
     num_source_file = 0
-    for file in collection.getElementsByTagName(file_tag):
-        if file.hasAttribute(code_line_tag):
-            attribute_value = file.getAttribute(code_line_tag)
-            if int(attribute_value) >= code_line:
+    for file_ in collection.getElementsByTagName('file'):
+        if file_.hasAttribute('code'):
+            attribute_value = file_.getAttribute('code')
+            if int(attribute_value) >= int(min_code_lines):
                 num_source_file += 1
-    return num_source_file
+    return [xml_string, num_source_file]
 
 
-def parse_xml_results(xml_string):
+def parse_xml_results(xml_string, num_source_files):
     results_dict = {
         'num_license_concluded': 0,
         'num_license_possible': 0,
@@ -89,8 +90,7 @@ def parse_xml_results(xml_string):
     results_dict['num_license_possible'] = \
         get_xml_item_count(collection, 'license_info', VALUES_TO_AVOID,
                            'val')
-    results_dict['total_num_source_files'] = \
-        code_line_validator(collection, 'file', 'code')
+    results_dict['total_num_source_files'] = num_source_files
 
     results_dict['total_num_files_with_license'] = \
         get_xml_item_count(collection, 'license_concluded',
@@ -134,6 +134,8 @@ def grade_scale(grade_num, gtype):
 
 
 def compute_grade(dict_of_values):
+    print("dict_of_values")
+    print(dict_of_values)
     grade1 = 100 * (float(dict_of_values['num_license_possible'
                     ]) / float(dict_of_values['total_num_source_files'
                     ]))
@@ -179,7 +181,6 @@ def establish_link(spdx_scan_results, source_package_results):
     source_collection = sourceDOMTree.documentElement
 
     # Get detail of each useful attribute.
-
     results_dict['num_common_files'] = \
         get_number_of_common_files(spdx_scan_results, source_collection)
     results_dict['total_number_of_files'] = \
