@@ -110,7 +110,7 @@ Analysing the source package: 3.90155696869 seconds
 Done.
 ```
 ### 4- Grader
-`fab grade:~/path_to_spdx_document,~/path_to_source_package`
+`fab grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
 GOOD! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
