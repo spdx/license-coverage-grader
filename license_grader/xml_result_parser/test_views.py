@@ -140,8 +140,6 @@ SOURCE_PACKAGE_RESULTS = """<results>
 </results>"""
 
 
-
-
 SPDX_SCAN_RESULTS = """<spdx_file>
     <data>
         <item>

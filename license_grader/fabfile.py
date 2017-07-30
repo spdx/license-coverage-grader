@@ -12,6 +12,22 @@ from xml.etree import ElementTree as et
 from lxml import etree
 from xml_result_parser.views import parse_xml_results, build_xml, establish_link, THRESHOLD_VALUE, grade_scale, MSG, code_line_validator, DEFAULT_CODE_LINES
 
+DEFAULT_CLOC_COMMAND_RESULT = """<?xml version="1.0"?>
+<results>
+<header>
+  <cloc_url>http://cloc.sourceforge.net</cloc_url>
+  <cloc_version>1.60</cloc_version>
+  <elapsed_seconds>0</elapsed_seconds>
+  <n_files>0</n_files>
+  <n_lines>0</n_lines>
+  <files_per_second>0</files_per_second>
+  <lines_per_second>0</lines_per_second>
+</header>
+<files>
+<file name="no/name" blank="0" comment="0" code="0"  language="Python" />
+<total blank="0" comment="0" code="0" />
+</files>
+</results>"""
 @contextmanager
 def introduce(intro_comment):
     """Status decorate an event."""
@@ -50,7 +66,12 @@ def analyse(package="", min_code_lines=DEFAULT_CODE_LINES, run_setup=True):
             setup()
         # to print ignored files to a file, add --ignored=ignore.txt
         cloc_command_result = local('cloc --xml --by-file {package}'.format(package=package), capture=True)
-        valid_code_lines = code_line_validator(etree.tostring(etree.fromstring(cloc_command_result.split("\n",4)[4])), min_code_lines)
+        formatted_command_result = ""
+        if len(cloc_command_result.split('\n')) < 4:
+            formatted_command_result = DEFAULT_CLOC_COMMAND_RESULT
+        else:
+            formatted_command_result = cloc_command_result.split("\n",4)[4]
+        valid_code_lines = code_line_validator(etree.tostring(etree.fromstring(formatted_command_result)), min_code_lines)
         if run_setup:
             print(cloc_command_result)
         else:
@@ -86,7 +107,7 @@ def grade(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES):
         setup()
         check_results = check(spdx_file=spdx_file, package=package, min_code_lines=min_code_lines, run_setup=False)
         print(MSG[check_results[0]])
-        if not check_results[0]:
+        if check_results[0]:
             # XML strings to etree
             spdx_scan_results_root = check_results[1]
             package_analysis_results_root = check_results[2]
@@ -107,7 +128,12 @@ def check(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES, run_setup
         package_analysis_results = analyse(package=package, min_code_lines=min_code_lines, run_setup=False)
         # XML strings to etree
         spdx_scan_results_root = etree.fromstring(spdx_scan_results)
-        package_analysis_results_root = etree.fromstring(package_analysis_results[0].split("\n",4)[4])
+        formatted_package_analysis_result = ""
+        if len(package_analysis_results[0].split('\n')) < 4:
+            formatted_package_analysis_result = DEFAULT_CLOC_COMMAND_RESULT
+        else:
+            formatted_package_analysis_result = package_analysis_results[0].split("\n",4)[4]
+        package_analysis_results_root = etree.fromstring(formatted_package_analysis_result)
         grade = establish_link(etree.tostring(spdx_scan_results_root), etree.tostring(package_analysis_results_root))
         is_valid = grade >= THRESHOLD_VALUE
         if run_setup:

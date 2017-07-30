@@ -134,14 +134,15 @@ def grade_scale(grade_num, gtype):
 
 
 def compute_grade(dict_of_values):
-    print("dict_of_values")
-    print(dict_of_values)
-    grade1 = 100 * (float(dict_of_values['num_license_possible'
-                    ]) / float(dict_of_values['total_num_source_files'
-                    ]))
-    grade2 = 100 * (float(dict_of_values['num_license_concluded'])
-                    / float(dict_of_values['total_num_source_files']))
-    return (grade_scale(grade1, 1), (grade_scale(grade2, 2)))
+    grade1 = "0 %"
+    grade2 = "0 %"
+    if dict_of_values['total_num_source_files'] > 0:
+        grade1 = 100 * (float(dict_of_values['num_license_possible'
+                        ]) / float(dict_of_values['total_num_source_files'
+                        ]))
+        grade2 = 100 * (float(dict_of_values['num_license_concluded'])
+                        / float(dict_of_values['total_num_source_files']))
+    return (grade_scale(grade2, 2))
 
 
 def build_xml(spdx_scan_result):
@@ -185,6 +186,8 @@ def establish_link(spdx_scan_results, source_package_results):
         get_number_of_common_files(spdx_scan_results, source_collection)
     results_dict['total_number_of_files'] = \
         get_xml_item_value(source_collection, 'n_files')
-    grade = 100 * (float(results_dict['num_common_files'])
-                   / float(results_dict['total_number_of_files']))
+    grade = "0 %"
+    if results_dict['total_number_of_files'] != '0':
+        grade = 100 * (float(results_dict['num_common_files'])
+                       / float(results_dict['total_number_of_files']))
     return grade

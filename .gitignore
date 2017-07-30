@@ -1,3 +1,6 @@
 *.pyc
 *.ini~
 *.txt~
+/dist/
+/*.egg-info
+/*.egg
