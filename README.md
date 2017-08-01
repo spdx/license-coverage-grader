@@ -58,7 +58,7 @@ Run `source ../../bin/activate`
 Installs cloc and requirements. However, since fabric is a requirement itself, this cannot be run without fabric being installed, reason why, for the first run; you should run `pip install -r requirements.txt` yourself.
 
 ### 2- Spdx document scan
-`fab scan:~/Downloads/fossology310-source.spdx`
+`fab scan:~/path/doc.spdx
 Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
 ```<?xml version="1.0" encoding="utf-8" ?>
@@ -84,33 +84,40 @@ An example output is shown below:
 ```
 
 ### 3- Package analysis
-`fab analyse:~/path_to_package`
+`fab analyse:~/path_to_source_package`
 Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
-```6 text files.
-       6 unique files.                              
-       2 files ignored.
-
+```
 <?xml version="1.0"?><results>
 <header>
   <cloc_url>http://cloc.sourceforge.net</cloc_url>
   <cloc_version>1.60</cloc_version>
-  <elapsed_seconds>0.0474860668182373</elapsed_seconds>
-  <n_files>6</n_files>
-  <n_lines>172</n_lines>
-  <files_per_second>126.352852573919</files_per_second>
-  <lines_per_second>3622.11510711901</lines_per_second>
+  <elapsed_seconds>7.50479102134705</elapsed_seconds>
+  <n_files>733</n_files>
+  <n_lines>134231</n_lines>
+  <files_per_second>97.6709408583149</files_per_second>
+  <lines_per_second>17886.0410127592</lines_per_second>
 </header>
-<languages>
-  <language name="Python" files_count="6" blank="17" comment="117" code="38" />
-  <total sum_files="6" blank="17" comment="117" code="38" />
-</languages>
+<files>
+  <file name="cadasta-platform/functional_tests/pages/Registration.py" blank="18" comment="2" code="64"  language="Python" />
+  <file name="cadasta-platform/cadasta/templates/allauth/account/email.html" blank="21" comment="0" code="64"  language="HTML" />
+  <file name="cadasta-platform/cadasta/questionnaires/views/api.py" blank="16" comment="0" code="64"  language="Python" />
+  <file name="cadasta-platform/cadasta/party/urls/default.py" blank="6" comment="0" code="64"  language="Python" />
+</files>
 </results>
+Analysing the source package: 3.90155696869 seconds
+
+Done.
 ```
 ### 4- Grader
-`fab grade:~/path_to_spdx_document,~/path_to_package`
+`fab grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
-GRADE:  D; (33.5527862685 %)
-```
+GOOD! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
 
+GRADE:  A with 99.3732590529 %  pass for files_with_license_concluded
+Analyse and Scan: 1290.17038298 seconds
+
+Done.
+
+```
