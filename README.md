@@ -42,6 +42,14 @@ Install them by running:
 This is just for safety, because before each command of the project is run (spdx document scan or pacakge analysis), these requirements are checked for installation if need be.
 So, one could skip this step and start using the project right away.
 
+### 8- Install the project with pip.
+Change the directory back to the project root,
+`cd ..`
+By now, you should be at:
+`license-grader-env/license-coverage-grader` , with the virtual environment activated.
+
+This will give you access to a whole new lot of `non fab` commands, as described below.
+
 ## Available terminal commands / functions
 
 Requirement:
@@ -58,7 +66,11 @@ Run `source ../../bin/activate`
 Installs cloc and requirements. However, since fabric is a requirement itself, this cannot be run without fabric being installed, reason why, for the first run; you should run `pip install -r requirements.txt` yourself.
 
 ### 2- Spdx document scan
-`fab scan:~/path/doc.spdx
+if you have install the project with pip;
+`lcg_scan:~/path/doc.spdx`
+else;
+`fab scan:~/path/doc.spdx`
+`
 Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
 ```<?xml version="1.0" encoding="utf-8" ?>
@@ -84,6 +96,9 @@ An example output is shown below:
 ```
 
 ### 3- Package analysis
+if you have install the project with pip;
+`lcg_analyse:~/path_to_source_package`
+else;
 `fab analyse:~/path_to_source_package`
 Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
@@ -110,6 +125,9 @@ Analysing the source package: 3.90155696869 seconds
 Done.
 ```
 ### 4- Grader
+if you have install the project with pip;
+`lcg_grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
+else;
 `fab grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
