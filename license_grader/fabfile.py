@@ -10,7 +10,8 @@ from fabric.api import env, local, task, warn_only
 from xmlbuilder import XMLBuilder
 from xml.etree import ElementTree as et
 from lxml import etree
-from license_grader.xml_result_parser.views import parse_xml_results, build_xml, establish_link, THRESHOLD_VALUE, grade_scale, MSG, code_line_validator, DEFAULT_CODE_LINES
+# from license_grader.xml_result_parser.views import parse_xml_results, build_xml, establish_link, THRESHOLD_VALUE, grade_scale, MSG, code_line_validator, DEFAULT_CODE_LINES
+from xml_result_parser.views import parse_xml_results, build_xml, establish_link, THRESHOLD_VALUE, grade_scale, MSG, code_line_validator, DEFAULT_CODE_LINES
 
 DEFAULT_CLOC_COMMAND_RESULT = """<?xml version="1.0"?>
 <results>
