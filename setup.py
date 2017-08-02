@@ -11,7 +11,6 @@ setup(name='license-coverage-grader',
       url='https://github.com/krysnuvadga/license-coverage-grader',
       author='Nuvadga Christian Tete',
       author_email='tetechris20@gmail.com',
-      license='MIT',
       packages=['license_grader', 'license_grader/xml_result_parser', 'license_grader/spdx_document_scanner', 'license_grader/license_grader'],
       zip_safe=False,
       entry_points = {
