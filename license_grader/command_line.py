@@ -42,4 +42,3 @@ def lcg_analyse():
 def lcg_grade():
     if argument_checker(sys.argv, 3):
         grade(spdx_file=sys.argv[1], package=sys.argv[2], min_code_lines=sys.argv[3])
-    print license_grader.text()

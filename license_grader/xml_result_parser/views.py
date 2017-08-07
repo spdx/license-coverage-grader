@@ -10,7 +10,7 @@ from colorama import Fore, Back, Style
 from colorama import init, deinit
 init()
 
-VALUES_TO_AVOID = ['NOASSERTION', 'NONE']
+VALUES_TO_AVOID = ['NOASSERTION', 'NONE', 'Match']
 SCALE = [('A', 90, Fore.GREEN), ('B', 75, Fore.BLUE), ('C', 55,
          Fore.MAGENTA), ('D', 30, Fore.YELLOW)]
 DEFAULT_CODE_LINES = 10
@@ -29,8 +29,19 @@ def progress_bar():
         sleep(0.1)
     bar.finish()
 
+def file_exists(packageCollection, filename):
+    item_tags = packageCollection.getElementsByTagName('file')
+    file_existence = False
+    for item_ in item_tags:
+        if item_.hasAttribute('name'):
+            item_value = item_.getAttribute('name')
+            if filename in item_value:
+                file_existence = True
+    return file_existence
+
 def get_xml_item_count(
-    collection,
+    spdxCollection,
+    packageCollection,
     item,
     values_to_avoid,
     tag_to_get,
@@ -41,10 +52,18 @@ def get_xml_item_count(
 
     item_count = 0
     attribute_value = 0
-    for item_ in collection.getElementsByTagName(item):
-        if item_.hasAttribute(tag_to_get):
-            attribute_value = item_.getAttribute(tag_to_get)
-            if attribute_value not in values_to_avoid:
+    sub_item_value = ''
+    sub_item_name_value = ''
+    item_tags = spdxCollection.getElementsByTagName('item')
+    for item_ in item_tags:
+        sub_item = item_.getElementsByTagName(item)
+        sub_item_name = item_.getElementsByTagName('file')
+        if sub_item[0].hasAttribute(tag_to_get):
+            sub_item_value = sub_item[0].getAttribute(tag_to_get)
+        if sub_item_name[0].hasAttribute(tag_to_get):
+            sub_item_name_value = sub_item_name[0].getAttribute(tag_to_get)
+        if file_exists(packageCollection, sub_item_name_value):
+            if sub_item_value not in values_to_avoid:
                 item_count += 1
     return item_count
 
@@ -69,31 +88,32 @@ def code_line_validator(xml_string, min_code_lines):
     return [xml_string, num_source_file]
 
 
-def parse_xml_results(xml_string, num_source_files):
+def parse_xml_results(spdx_results, package_analysis_results, num_source_files):
     results_dict = {
         'num_license_concluded': 0,
         'num_license_possible': 0,
         'total_num_source_files': 0,
         'total_num_files_with_license': 0,
         }
-
     # Open XML document
 
-    DOMTree = xml.dom.minidom.parseString(xml_string)
-    collection = DOMTree.documentElement
+    spdxDOMTree = xml.dom.minidom.parseString(spdx_results)
+    spdxcollection = spdxDOMTree.documentElement
+    packageDOMTree = xml.dom.minidom.parseString(package_analysis_results)
+    packageCollection = packageDOMTree.documentElement
 
     # Get detail of each useful attribute.
 
     results_dict['num_license_concluded'] = \
-        get_xml_item_count(collection, 'license_concluded',
+        get_xml_item_count(spdxDOMTree, packageCollection, 'license_concluded',
                            VALUES_TO_AVOID, 'val')
     results_dict['num_license_possible'] = \
-        get_xml_item_count(collection, 'license_info', VALUES_TO_AVOID,
+        get_xml_item_count(spdxDOMTree, packageCollection, 'license_info', VALUES_TO_AVOID,
                            'val')
     results_dict['total_num_source_files'] = num_source_files
 
     results_dict['total_num_files_with_license'] = \
-        get_xml_item_count(collection, 'license_concluded',
+        get_xml_item_count(spdxDOMTree, packageCollection, 'license_concluded',
                            VALUES_TO_AVOID, 'val')
     return compute_grade(results_dict)
 
