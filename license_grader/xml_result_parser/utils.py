@@ -125,7 +125,7 @@ class CheckPackage:
         self.package_analysis_results_root = etree.fromstring(formatted_package_analysis_result)
         grade = self.establish_link()
         is_valid = grade >= THRESHOLD_VALUE
-        print('The package matches the spdx file by {0}, the lowest permitted value is: {1}'.format(self.package_analysis_results[1], THRESHOLD_VALUE))
+        print('The package matches the spdx file by {0}, the lowest permitted value is: {1}'.format(grade, THRESHOLD_VALUE))
         return [is_valid, self.spdx_scan_results_root, self.package_analysis_results_root, self.package_analysis_results[1]]
 
     def establish_link(self):
