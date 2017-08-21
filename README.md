@@ -53,25 +53,18 @@ This will give you access to a whole new lot of `non fab` commands, as described
 ## Available terminal commands / functions
 
 Requirement:
-Inorder to run the commands listed below, 
+Inorder to run the commands listed below,
 ### i) you should be in the path:
 `license-grader-env/license-coverage-grader/license_grader$ `
 
 ### ii) You must have the virtualenv activated:
-If in `license-grader-env/license-coverage-grader/license_grader$ ` , 
+If in `license-grader-env/license-coverage-grader/license_grader$ ` ,
 Run `source ../../bin/activate`
 
-### 1- Setup
-`fab setup`
-Installs cloc and requirements. However, since fabric is a requirement itself, this cannot be run without fabric being installed, reason why, for the first run; you should run `pip install -r requirements.txt` yourself.
-
-### 2- Spdx document scan
+### 1- Spdx document scan
 if you have install the project with pip;
-`lcg_scan:~/path/doc.spdx`
-else;
-`fab scan:~/path/doc.spdx`
-`
-Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
+`scan --spdx ~/path/doc.spdx`
+Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file.
 An example output is shown below:
 ```<?xml version="1.0" encoding="utf-8" ?>
     <spdx_file>
@@ -95,12 +88,10 @@ An example output is shown below:
   </spdx_file>
 ```
 
-### 3- Package analysis
+### 2- Package analysis
 if you have install the project with pip;
-`lcg_analyse:~/path_to_source_package`
-else;
-`fab analyse:~/path_to_source_package`
-Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
+`analyse --package ~/path_to_source_package`
+Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal.
 An example output is shown below:
 ```
 <?xml version="1.0"?><results>
@@ -124,11 +115,16 @@ Analysing the source package: 3.90155696869 seconds
 
 Done.
 ```
+
+### 3- Check
+if you have install the project with pip;
+`check --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
+This Scans the pdx document and analyses the source package to determine how compatible they are.
+
+
 ### 4- Grader
 if you have install the project with pip;
-`lcg_grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
-else;
-`fab grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
+`grade --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
 GOOD! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
