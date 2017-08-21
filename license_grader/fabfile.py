@@ -19,6 +19,7 @@ from colorama import init, deinit
 from xml_result_parser.utils import AnalysePackage, ScanSpdx, CheckPackage, GradePackage
 
 DEFAULT_CODE_LINES = 0
+DEFAULT_THRESHOLD_VALUE = 0
 
 @contextmanager
 def introduce(intro_comment):
@@ -67,16 +68,16 @@ def scan(spdx_file=""):
 
 
 @task
-def grade(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES):
+def grade(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES, min_matching_percentage=DEFAULT_THRESHOLD_VALUE):
     """Analyse package and scan an spdx document"""
     with introduce("Analyse and scan: "):
-        grade_obj = GradePackage(spdx_file, package, min_code_lines)
+        grade_obj = GradePackage(spdx_file, package, min_code_lines, min_matching_percentage)
         grade_results = grade_obj.grade()
 
 
 @task
-def check(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES):
+def check(spdx_file="", package="", min_code_lines=DEFAULT_CODE_LINES, min_matching_percentage=DEFAULT_THRESHOLD_VALUE):
     """Check whether an spdx document points to the real Source package; USAGE: fab check:<spdx_document>,<source_file_or_package>"""
     with introduce("Checking the link between spdx file and package: "):
-        check_obj = CheckPackage(spdx_file, package, min_code_lines)
+        check_obj = CheckPackage(spdx_file, package, min_code_lines, min_matching_percentage)
         check_obj.check()

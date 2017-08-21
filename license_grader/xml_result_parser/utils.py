@@ -104,11 +104,13 @@ class CheckPackage:
     package_analysis_results_root = None
     source_collection = None
     spdx_collection = None
+    min_matching_percentage = 0
 
-    def __init__(self, spdx_file, source_package, min_code_lines):
+    def __init__(self, spdx_file, source_package, min_code_lines, min_matching_percentage):
         self.source_package = source_package
         self.spdx_file = spdx_file
         self.min_code_lines = min_code_lines
+        self.min_matching_percentage = min_matching_percentage
 
 
     def check(self):
@@ -124,8 +126,8 @@ class CheckPackage:
             formatted_package_analysis_result = self.package_analysis_results[0].split("\n",4)[4]
         self.package_analysis_results_root = etree.fromstring(formatted_package_analysis_result)
         grade = self.establish_link()
-        is_valid = grade >= THRESHOLD_VALUE
-        print('The package matches the spdx file by {0}, the lowest permitted value is: {1}'.format(grade, THRESHOLD_VALUE))
+        is_valid = grade >= self.min_matching_percentage
+        print('The package matches the spdx file by {0}, the lowest permitted value is: {1}'.format(grade, self.min_matching_percentage))
         return [is_valid, self.spdx_scan_results_root, self.package_analysis_results_root, self.package_analysis_results[1]]
 
     def establish_link(self):
@@ -191,11 +193,13 @@ class GradePackage:
         }
     check_results = None
     xml_results = None
+    min_matching_percentage = 0
 
-    def __init__(self, spdx_file, package, min_code_lines):
+    def __init__(self, spdx_file, package, min_code_lines, min_matching_percentage):
         self.spdx_file = spdx_file
         self.package = package
         self.min_code_lines = min_code_lines
+        self.min_matching_percentage = min_matching_percentage
 
     def grade(self):
         check_obj = CheckPackage(self.spdx_file, self.package, self.min_code_lines)
