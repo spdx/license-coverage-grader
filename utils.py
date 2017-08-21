@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from django.shortcuts import render
 from xml.dom.minidom import parse, parseString
 import xml.dom.minidom
 from xmlbuilder import XMLBuilder

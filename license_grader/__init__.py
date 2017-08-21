@@ -1,2 +1,0 @@
-def text():
-    return ('Test')
