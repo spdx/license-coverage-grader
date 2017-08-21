@@ -126,7 +126,7 @@ class CheckPackage:
             formatted_package_analysis_result = self.package_analysis_results[0].split("\n",4)[4]
         self.package_analysis_results_root = etree.fromstring(formatted_package_analysis_result)
         grade = self.establish_link()
-        is_valid = grade >= self.min_matching_percentage
+        is_valid = grade >= float(self.min_matching_percentage)
         print('The package matches the spdx file by {0}, the lowest permitted value is: {1}'.format(grade, self.min_matching_percentage))
         return [is_valid, self.spdx_scan_results_root, self.package_analysis_results_root, self.package_analysis_results[1]]
 
@@ -202,7 +202,7 @@ class GradePackage:
         self.min_matching_percentage = min_matching_percentage
 
     def grade(self):
-        check_obj = CheckPackage(self.spdx_file, self.package, self.min_code_lines)
+        check_obj = CheckPackage(self.spdx_file, self.package, self.min_code_lines, self.min_matching_percentage)
         self.check_results = check_obj.check()
         print(MSG[self.check_results[0]])
         if self.check_results[0]:
