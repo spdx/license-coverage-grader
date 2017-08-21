@@ -42,6 +42,14 @@ Install them by running:
 This is just for safety, because before each command of the project is run (spdx document scan or pacakge analysis), these requirements are checked for installation if need be.
 So, one could skip this step and start using the project right away.
 
+### 8- Install the project with pip.
+Change the directory back to the project root,
+`cd ..`
+By now, you should be at:
+`license-grader-env/license-coverage-grader` , with the virtual environment activated.
+
+This will give you access to a whole new lot of `non fab` commands, as described below.
+
 ## Available terminal commands / functions
 
 Requirement:
@@ -58,7 +66,11 @@ Run `source ../../bin/activate`
 Installs cloc and requirements. However, since fabric is a requirement itself, this cannot be run without fabric being installed, reason why, for the first run; you should run `pip install -r requirements.txt` yourself.
 
 ### 2- Spdx document scan
-`fab scan:~/Downloads/fossology310-source.spdx`
+if you have install the project with pip;
+`lcg_scan:~/path/doc.spdx`
+else;
+`fab scan:~/path/doc.spdx`
+`
 Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
 ```<?xml version="1.0" encoding="utf-8" ?>
@@ -84,7 +96,10 @@ An example output is shown below:
 ```
 
 ### 3- Package analysis
-`fab analyse:~/path_to_package`
+if you have install the project with pip;
+`lcg_analyse:~/path_to_source_package`
+else;
+`fab analyse:~/path_to_source_package`
 Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal. Before this is run, the command `fab setup` mentioned above will be run, to ascertain that we would not have errors due to the absence of cloc, or any dependencies.
 An example output is shown below:
 ```
@@ -103,17 +118,6 @@ An example output is shown below:
   <file name="cadasta-platform/cadasta/templates/allauth/account/email.html" blank="21" comment="0" code="64"  language="HTML" />
   <file name="cadasta-platform/cadasta/questionnaires/views/api.py" blank="16" comment="0" code="64"  language="Python" />
   <file name="cadasta-platform/cadasta/party/urls/default.py" blank="6" comment="0" code="64"  language="Python" />
-  <file name="cadasta-platform/htmlcov/jquery.hotkeys.js" blank="18" comment="17" code="64"  language="Javascript" />
-  <file name="cadasta-platform/cadasta/resources/tests/test_widgets.py" blank="9" comment="2" code="63"  language="Python" />
-  <file name="cadasta-platform/cadasta/templates/spatial/location_edit.html" blank="8" comment="0" code="63"  language="HTML" />
-  <file name="cadasta-platform/cadasta/core/tests/test_filters.py" blank="13" comment="0" code="63"  language="Python" />
-  <file name="cadasta-platform/cadasta/spatial/tests/test_urls_async.py" blank="4" comment="0" code="17"  language="Python" />
-  <file name="cadasta-platform/cadasta/search/tests/test_urls_async.py" blank="4" comment="0" code="17"  language="Python" />
-  <file name="cadasta-platform/cadasta/runserver" blank="3" comment="0" code="16"  language="Bourne Again Shell" />
-  <file name="cadasta-platform/cadasta/templates/allauth/account/verified_email_required.html" blank="11" comment="0" code="16"  
-  <file name="cadasta-platform/htmlcov/jquery.tablesorter.min.js" blank="1" comment="0" code="1"  language="Javascript" />
-  <file name="cadasta-platform/functional_tests/projects/test_project.py" blank="13" comment="109" code="0"  language="Python" />
-  <total blank="17175" comment="6111" code="110945" />
 </files>
 </results>
 Analysing the source package: 3.90155696869 seconds
@@ -121,11 +125,14 @@ Analysing the source package: 3.90155696869 seconds
 Done.
 ```
 ### 4- Grader
-`fab grade:~/path_to_spdx_document,~/path_to_package`
+if you have install the project with pip;
+`lcg_grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
+else;
+`fab grade:~/path_to_spdx_document,~/path_to_source_package,min_code_lines`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
-BRILLIANT! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
-GRADE:  A with 99.3732590529 %  pass for files_with_any_kind_of_license_infos
+GOOD! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
+
 GRADE:  A with 99.3732590529 %  pass for files_with_license_concluded
 Analyse and Scan: 1290.17038298 seconds
 
