@@ -54,7 +54,7 @@ class ScanSpdx:
                     self.scan_results.license_info(val=single_line[1])
                     self.scan_results.license_concluded(val=single_line[2])
                 etree_node = ~self.scan_results
-        print(str(self.scan_results))
+        # print(str(self.scan_results))
         return str(self.scan_results)
 
 
@@ -77,7 +77,7 @@ class AnalysePackage:
         else:
             self.analysis_results = pkg_scan_result.split("\n",4)[4]
         valid_code_lines = self.validate(etree.tostring(etree.fromstring(self.analysis_results)), self.min_code_lines)
-        print(pkg_scan_result)
+        # print(pkg_scan_result)
         return [pkg_scan_result, valid_code_lines[1]]
 
 
