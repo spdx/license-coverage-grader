@@ -15,7 +15,7 @@ create a folder named "license-grader-env"(you can call this folder anything you
 
 ### 3- Clone the repository
 
-`git clone https://github.com/krysnuvadga/license-coverage-grader.git`
+`git clone https://github.com/spdx/license-coverage-grader.git`
 
 ### 4- Navigate to the project you just cloned
 
