@@ -57,4 +57,4 @@ def grade(verbose, spdx, package, lines, percent):
     click.echo("Grading the source package.")
     grade_obj = GradePackage(spdx, package, lines, percent)
     grade_results = grade_obj.grade()
-    # click.echo("Source package was successfull graded against its spdx document.")
+    #click.echo("Source package was successfull graded against its spdx document.")
