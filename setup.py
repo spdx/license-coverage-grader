@@ -21,8 +21,7 @@ setup(
         'python-Levenshtein'
     ],
     entry_points={
-        'console_scripts': ['myhello=cmds:cli',
-                            'scan=cmds:scan',
+        'console_scripts': ['scan=cmds:scan',
                             'analyse=cmds:analyse',
                             'check=cmds:check',
                             'grade=cmds:grade'],

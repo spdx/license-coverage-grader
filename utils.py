@@ -27,8 +27,8 @@ DEFAULT_CLOC_COMMAND_RESULT = """
 </results>"""
 THRESHOLD_VALUE = 80
 VALUES_TO_AVOID = ['NOASSERTION', 'NONE', 'Match']
-MSG = {True: Fore.BLUE + 'Good! The spdx document and the source files match.',
-       False: Fore.RED + 'Could not proceed because the source files do not match with the spdx document provided.'}
+MSG = {True: Fore.BLUE + 'Preliminary scan as established a match between the spdx document and the source files. Proceeding ...',
+       False: Fore.RED + 'Could not proceed! Make sure your the spdx document you have provided match the source package.'}
 SCALE = [('A', 90, Fore.GREEN), ('B', 75, Fore.BLUE), ('C', 55,
          Fore.MAGENTA), ('D', 30, Fore.YELLOW)]
 
