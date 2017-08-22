@@ -37,7 +37,7 @@ By now, your path in the terminal should look like:
 The dependencies are listed in the requirements file.
 Install them by running:
 
-`pip install -r requirements.txt`
+`pip install --editable . `
 
 This is just for safety, because before each command of the project is run (spdx document scan or pacakge analysis), these requirements are checked for installation if need be.
 So, one could skip this step and start using the project right away.
@@ -127,11 +127,10 @@ if you have install the project with pip;
 `grade --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
-GOOD! SPDX DOCUMENT IS POINTING TO ITS ORIGINAL SOURCE PACKAGE.
+The package matches the spdx file by 0.0, the lowest permitted value is: 0
+Preliminary scan as established a match between the spdx document and the source files. Proceeding ...
+GRADE:  F with 0.0 %  pass for files_with_license_concluded
+GRADE:  F with 0.0 %  pass for files_with_any_kind_of_license_infos
 
-GRADE:  A with 99.3732590529 %  pass for files_with_license_concluded
-Analyse and Scan: 1290.17038298 seconds
-
-Done.
 
 ```
