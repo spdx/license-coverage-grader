@@ -103,7 +103,7 @@ def read_csv(filename, spdx):
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
 
-def diff_spdx(spdxfiles, totfiles, windcrap):
+def diff_spdx(spdxfiles, totfiles, wr):
 
     spdx = {}
     files = set()
@@ -126,7 +126,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
 
     print(t)
 
-    if windcrap:
+    if wr:
         # Sanitize windrivel output which drops '/'
         # from the middle of the file path
         #
@@ -196,7 +196,7 @@ if __name__ == '__main__':
                         help = 'list of source URIs, minimum 2')
     parser.add_argument("-s", "--sourcefiles", type=int, default=0,
                     help="Number of files in the source")
-    parser.add_argument("-w", "--windcrap", action='store_true',
+    parser.add_argument("-w", "--wr", action='store_true',
                     help="Sanitize windrivel filenames")
 
     args = parser.parse_args()
@@ -205,4 +205,4 @@ if __name__ == '__main__':
         print("Not enough SPDX files\n")
         sys.exit(1)
 
-    diff_spdx(args.filenames, args.sourcefiles, args.windcrap)
+    diff_spdx(args.filenames, args.sourcefiles, args.wr)
