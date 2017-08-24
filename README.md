@@ -44,6 +44,29 @@ Inorder to run the commands listed below,
 If in `license-grader-env/license-coverage-grader/license_grader$ ` ,
 Run `source ../../bin/activate`
 
+### ALL THE COMMANDS BELOW HAVE A `--help` OPTION WHICH DISPLAYS DESCRIPTIVE MESSAGES.
+
+For instance:
+
+`grade --help`
+
+Outputs:
+
+```
+Usage: grade [OPTIONS]
+
+  Grades a source package
+
+Options:
+  --verbose          Will print verbose messages.
+  --spdx TEXT        The spdx document.
+  --package TEXT     The source package.
+  --lines INTEGER    The min number of code lines allowed.
+  --percent INTEGER  The min matching percentage.
+  --help             Show this message and exit.
+```
+### THE SAME GOES FOR THE `scan`, `check` and `analyse` methods.
+
 ### 1- Spdx document scan
 if you have install the project with pip;
 `scan --spdx ~/path/doc.spdx`
