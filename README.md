@@ -3,6 +3,7 @@ This is a tool which take an SPDX document and pointer to the original source fi
 
 ## Project setup
 Ideal OS: Ubuntu 16.04 LTS
+
 Ideal python version: 2.7
 
 ### 1- The virtual environment we use for this repo is virtualenv.
