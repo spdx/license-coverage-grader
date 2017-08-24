@@ -1,3 +1,24 @@
+
+# Copyright (c) 2017 Nuvadga Christian. All rights reserved.
+# https://github.com/spdx/license-coverage-grader/
+# The License-Coverage-Grader software is licensed under the Apache License version 2.0.
+# Data generated with license-coverage-grader require an acknowledgment.
+# license-coverage-grader is a trademark of The Software Package Data Exchange(SPDX).
+
+# You may not use this software except in compliance with the License.
+# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+
+# When you publish or redistribute any data created with license-coverage-grader or any license-coverage-grader
+# derivative work, you must accompany this data with the following acknowledgment:
+
+#   Generated with license-coverage-grader and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
+#   OR CONDITIONS OF ANY KIND, either express or implied.
+
+
 from __future__ import unicode_literals
 from xml.dom.minidom import parse, parseString
 import xml.dom.minidom
@@ -38,11 +59,12 @@ class ScanSpdx:
 
 
     def __init__(self, spdx_file):
+        """Initializes class variables"""
         self.spdx_file = spdx_file
 
 
     def scan(self):
-        # call(["python -s spdx_scanner.py -s 10571", self.spdx_file])
+        """Scans an spdx file by making good use of spdx_scanner.py file; then outputs the results in xml format."""
         spdx_file = self.spdx_file
         spdx_scan_result = local('python -s spdx_scanner.py -s 10571 {spdx_file}'.format(spdx_file=spdx_file), capture=True)
         self.scan_results = XMLBuilder('spdx_file')
@@ -65,11 +87,13 @@ class AnalysePackage:
 
 
     def __init__(self, source_package, min_code_lines):
+        """Initializes class variables"""
         self.source_package = source_package
         self.min_code_lines = min_code_lines
 
 
     def analyse(self):
+        """Analyses a source package, by using the utility named Cloc; and outputs the results in xml format, for easy processing."""
         package = self.source_package
         pkg_scan_result = local('cloc --xml --force-lang="PHP",in --force-lang="PHP",conf --force-lang="PHP",twig --force-lang="PHP",json --by-file {package}'.format(package=package), capture=True)
         if len(pkg_scan_result.split('\n')) < 4:
@@ -82,6 +106,7 @@ class AnalysePackage:
 
 
     def validate(self, xml_results, min_code_lines):
+        """Checks for source code validity against the minimum lines of code entered in the command option. The default is 0."""
         DOMTree = xml.dom.minidom.parseString(xml_results)
         collection = DOMTree.documentElement
         num_source_file = 0
@@ -106,6 +131,7 @@ class CheckPackage:
     min_matching_percentage = 0
 
     def __init__(self, spdx_file, source_package, min_code_lines, min_matching_percentage):
+        """Initializes class variables"""
         self.source_package = source_package
         self.spdx_file = spdx_file
         self.min_code_lines = min_code_lines
@@ -113,6 +139,7 @@ class CheckPackage:
 
 
     def check(self):
+        """Checks if a source package matches the given spdx document and outputs the result."""
         scan_obj = ScanSpdx(self.spdx_file)
         analysis_obj = AnalysePackage(self.source_package, self.min_code_lines)
         self.package_analysis_results = analysis_obj.analyse()
@@ -130,6 +157,7 @@ class CheckPackage:
         return [is_valid, self.spdx_scan_results_root, self.package_analysis_results_root, self.package_analysis_results[1]]
 
     def establish_link(self):
+        """Computes the grade at which the source package corresponds to the spdx document."""
         results_dict = {'total_number_of_files': 0, 'num_common_files': 0}
         spdx_scan_results = etree.tostring(self.spdx_scan_results_root)
         source_package_results = etree.tostring(self.package_analysis_results_root)
@@ -152,6 +180,7 @@ class CheckPackage:
 
 
     def get_number_of_common_files(self):
+        """Gets the count of files that are present in the source package and mentioned in the spdx document."""
         item_count = 0
         spdx_scan_results = etree.tostring(self.spdx_scan_results_root)
         source_package_results = etree.tostring(self.package_analysis_results_root)
@@ -168,6 +197,7 @@ class CheckPackage:
 
 
     def get_xml_item_value(self, tag_to_get):
+        """Gets the value of a tag in the combined xml document of spdx scan and package analysis results."""
         attribute_value = 0
         elt_list = self.source_collection.getElementsByTagName(tag_to_get)
         if len(elt_list):
@@ -195,12 +225,14 @@ class GradePackage:
     min_matching_percentage = 0
 
     def __init__(self, spdx_file, package, min_code_lines, min_matching_percentage):
+        """Initializes class variables"""
         self.spdx_file = spdx_file
         self.package = package
         self.min_code_lines = min_code_lines
         self.min_matching_percentage = min_matching_percentage
 
     def grade(self):
+        """Grades a source package following its spdx document"""
         check_obj = CheckPackage(self.spdx_file, self.package, self.min_code_lines, self.min_matching_percentage)
         self.check_results = check_obj.check()
         print(MSG[self.check_results[0]])
@@ -210,6 +242,7 @@ class GradePackage:
             self.xml_results = self.parse_xml_results()
 
     def parse_xml_results(self):
+        """Parses the xml results to extract information used to compute the grade."""
         spdx_results = etree.tostring(self.spdx_scan_results)
         package_analysis_results = etree.tostring(self.package_analysis_results)
 
@@ -226,6 +259,7 @@ class GradePackage:
 
 
     def compute_grade(self):
+        """Computes the grade of a source package."""
         grade1 = "0 %"
         grade2 = "0 %"
         if self.results_dict['total_num_source_files'] > 0:
@@ -238,6 +272,7 @@ class GradePackage:
 
 
     def grade_scale(self, grade_num, gtype):
+        """Logically returns grade results."""
         if grade_num > SCALE[0][1]:
             return self.grade_string(SCALE[0][0], grade_num, gtype)
         if grade_num > SCALE[1][1]:
@@ -277,6 +312,7 @@ class GradePackage:
         values_to_avoid,
         tag_to_get,
         ):
+        """Gets the count of an xml tag in the xml documend. Used to get the number of occurences of a tag in the combined xml."""
         item_count = 0
         attribute_value = 0
         sub_item_value = ''
@@ -295,6 +331,7 @@ class GradePackage:
         return item_count
 
     def file_exists(self, filename):
+        """Checks for the existence of a file."""
         item_tags = self.packageCollection.getElementsByTagName('file')
         file_existence = False
         for item_ in item_tags:
