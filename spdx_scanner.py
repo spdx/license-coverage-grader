@@ -2,7 +2,8 @@
 # https://github.com/spdx/license-coverage-grader/
 # The License-Coverage-Grader software is licensed under the Apache License version 2.0.
 # Data generated with license-coverage-grader require an acknowledgment.
-# license-coverage-grader is a trademark of The Software Package Data Exchange(SPDX).
+# license-coverage-grader is a trademark of The Software Package Data
+# Exchange(SPDX).
 
 # You may not use this software except in compliance with the License.
 # You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
@@ -12,7 +13,8 @@
 # specific language governing permissions and limitations under the License.
 
 # When you publish or redistribute any data created with license-coverage-grader or any license-coverage-grader
-# derivative work, you must accompany this data with the following acknowledgment:
+# derivative work, you must accompany this data with the following
+# acknowledgment:
 
 #   Generated with license-coverage-grader and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
 #   OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,12 +29,14 @@ import copy
 import sys
 import csv
 
+
 class spdxdata(object):
     def __init__(self, fname):
         self.fname = fname
         self.parser = ""
         self.filerefs = {}
         self.files = set()
+
 
 class filedata(object):
     def __init__(self, fname, info=None, concluded=None):
@@ -45,6 +49,8 @@ class filedata(object):
             self.licconcluded.append(concluded)
 
 # Trivial SPDX scan
+
+
 def read_spdx(filename, spdx):
     with open(filename) as f:
         fname = None
@@ -62,7 +68,8 @@ def read_spdx(filename, spdx):
                 if (fname):
                     spdx.filerefs[fname] = fdata
 
-                fname = parts[1].strip().split('/', 1)[1].strip().replace(",", "%2C")
+                fname = parts[1].strip().split(
+                    '/', 1)[1].strip().replace(",", "%2C")
                 fdata = filedata(fname)
 
             if key == 'LicenseConcluded':
@@ -82,6 +89,8 @@ def read_spdx(filename, spdx):
             spdx.filerefs[fname] = fdata
 
 # LID CSV scan
+
+
 def read_csv(filename, spdx):
 
     spdx.parser = 'LID'
@@ -103,12 +112,13 @@ def read_csv(filename, spdx):
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
 
+
 def diff_spdx(spdxfiles, totfiles, wr):
 
     spdx = {}
     files = set()
 
-    t = "Tool %d" %totfiles
+    t = "Tool %d" % totfiles
     for spf in spdxfiles:
         s = spdxdata(spf)
 
@@ -120,7 +130,7 @@ def diff_spdx(spdxfiles, totfiles, wr):
         s.files = set(sorted(s.filerefs.keys()))
         files = files | s.files
         spdx[spf] = s
-        t += "," + s.parser + ":%d" %(len(s.files))
+        t += "," + s.parser + ":%d" % (len(s.files))
 
     t += ",Match"
 
@@ -133,7 +143,7 @@ def diff_spdx(spdxfiles, totfiles, wr):
         # Are there any functional tools out there?
         #
         # This certainly can be done smarter, but WTF
-        sanitize = { }
+        sanitize = {}
         for src in sorted(files):
             if src in sanitize:
                 continue
@@ -148,7 +158,7 @@ def diff_spdx(spdxfiles, totfiles, wr):
                 if len(ops) != 3:
                     continue
 
-                #arch/arc/cpu/arc700/u-boot.lds -> arch/arc/cpu/arc700u-boot.lds
+                # arch/arc/cpu/arc700/u-boot.lds -> arch/arc/cpu/arc700u-boot.lds
                 #[('equal', 0, 19, 0, 19), ('delete', 19, 20, 19, 19), ('equal', 20, 30, 19, 29)]
                 if ops[0][0] != 'equal' or ops[1][0] != 'delete' or ops[2][0] != 'equal':
                     continue
@@ -177,8 +187,10 @@ def diff_spdx(spdxfiles, totfiles, wr):
         lics = None
         match = "Y"
         for spf in spdxfiles:
-            l = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licinfo
-            lico = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licconcluded
+            l = spdx[spf].filerefs.get(src, filedata(
+                src, 'NOTSCANNED', 'NOTSCANNED')).licinfo
+            lico = spdx[spf].filerefs.get(src, filedata(
+                src, 'NOTSCANNED', 'NOTSCANNED')).licconcluded
             if not lics:
                 lics = copy.copy(l)
             elif set(lics) != set(l):
@@ -187,17 +199,18 @@ def diff_spdx(spdxfiles, totfiles, wr):
                 lics = copy.copy(lico)
             elif set(lics) != set(lico):
                 match = "N"
-            info = "," + " ".join(map(str,l)) + "," + " ".join(map(str,lico))
+            info = "," + " ".join(map(str, l)) + "," + " ".join(map(str, lico))
         print(src + info)
 
+
 if __name__ == '__main__':
-    parser = ArgumentParser(description = 'Diff of two or more SPDX files')
-    parser.add_argument('filenames', metavar = 'file', nargs = '+',
-                        help = 'list of source URIs, minimum 2')
+    parser = ArgumentParser(description='Diff of two or more SPDX files')
+    parser.add_argument('filenames', metavar='file', nargs='+',
+                        help='list of source URIs, minimum 2')
     parser.add_argument("-s", "--sourcefiles", type=int, default=0,
-                    help="Number of files in the source")
+                        help="Number of files in the source")
     parser.add_argument("-w", "--wr", action='store_true',
-                    help="Sanitize wr filenames")
+                        help="Sanitize wr filenames")
 
     args = parser.parse_args()
 

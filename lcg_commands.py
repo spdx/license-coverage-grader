@@ -3,7 +3,8 @@
 # https://github.com/spdx/license-coverage-grader/
 # The License-Coverage-Grader software is licensed under the Apache License version 2.0.
 # Data generated with license-coverage-grader require an acknowledgment.
-# license-coverage-grader is a trademark of The Software Package Data Exchange(SPDX).
+# license-coverage-grader is a trademark of The Software Package Data
+# Exchange(SPDX).
 
 # You may not use this software except in compliance with the License.
 # You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
@@ -13,13 +14,15 @@
 # specific language governing permissions and limitations under the License.
 
 # When you publish or redistribute any data created with license-coverage-grader or any license-coverage-grader
-# derivative work, you must accompany this data with the following acknowledgment:
+# derivative work, you must accompany this data with the following
+# acknowledgment:
 
 #   Generated with license-coverage-grader and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
 #   OR CONDITIONS OF ANY KIND, either express or implied.
 
 import click
 from utils import AnalysePackage, ScanSpdx, CheckPackage, GradePackage
+
 
 @click.command()
 @click.option('--verbose', is_flag=True, help="Will print verbose messages.")
@@ -36,8 +39,13 @@ def scan(verbose, spdx):
 
 @click.command()
 @click.option('--verbose', is_flag=True, help="Will print verbose messages.")
-@click.option('--package', multiple=False, default='', help='The source package.')
-@click.option('--lines', multiple=False, default='', help='The min number of code lines allowed.')
+@click.option(
+    '--package',
+    multiple=False,
+    default='',
+    help='The source package.')
+@click.option('--lines', multiple=False, default='',
+              help='The min number of code lines allowed.')
 def analyse(verbose, package, lines):
     """Analyse a source package"""
     if verbose:
@@ -51,14 +59,21 @@ def analyse(verbose, package, lines):
 @click.command()
 @click.option('--verbose', is_flag=True, help="Will print verbose messages.")
 @click.option('--spdx', multiple=False, default='', help='The spdx document.')
-@click.option('--package', multiple=False, default='', help='The source package.')
-@click.option('--lines', multiple=False, default=0, help='The min number of code lines allowed.')
-@click.option('--percent', multiple=False, default=0, help='The min matching percentage.')
+@click.option(
+    '--package',
+    multiple=False,
+    default='',
+    help='The source package.')
+@click.option('--lines', multiple=False, default=0,
+              help='The min number of code lines allowed.')
+@click.option('--percent', multiple=False, default=0,
+              help='The min matching percentage.')
 def check(verbose, spdx, package, lines, percent):
     """Checks the compatibility between an spdx document and a source package."""
     if verbose:
         click.echo("We are in the verbose mode.")
-    click.echo("We are now checking the source package/spdx document compatibility.")
+    click.echo(
+        "We are now checking the source package/spdx document compatibility.")
     check_obj = CheckPackage(spdx, package, lines, percent)
     check_obj.check()
     click.echo("Checked the source package/spdx document compatibility.")
@@ -67,9 +82,15 @@ def check(verbose, spdx, package, lines, percent):
 @click.command()
 @click.option('--verbose', is_flag=True, help="Will print verbose messages.")
 @click.option('--spdx', multiple=False, default='', help='The spdx document.')
-@click.option('--package', multiple=False, default='', help='The source package.')
-@click.option('--lines', multiple=False, default=0, help='The min number of code lines allowed.')
-@click.option('--percent', multiple=False, default=0, help='The min matching percentage.')
+@click.option(
+    '--package',
+    multiple=False,
+    default='',
+    help='The source package.')
+@click.option('--lines', multiple=False, default=0,
+              help='The min number of code lines allowed.')
+@click.option('--percent', multiple=False, default=0,
+              help='The min matching percentage.')
 def grade(verbose, spdx, package, lines, percent):
     """Grades a source package"""
     if verbose:
