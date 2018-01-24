@@ -48,7 +48,7 @@ Run `source ../../bin/activate`
 
 For instance:
 
-`grade --help`
+`spdx-coverage-grade --help`
 
 Outputs:
 
@@ -69,7 +69,7 @@ Options:
 
 ### 1- Spdx document scan
 if you have install the project with pip;
-`scan --spdx ~/path/doc.spdx`
+`spdx-coverage-scan --spdx ~/path/doc.spdx`
 Scans the spdx document, and outputs the results in an xml format as a string, on the terminal. These results are not printed to a file.
 An example output is shown below:
 ```<?xml version="1.0" encoding="utf-8" ?>
@@ -96,7 +96,7 @@ An example output is shown below:
 
 ### 2- Package analysis
 if you have install the project with pip;
-`analyse --package ~/path_to_source_package`
+`spdx-coverage-analyse --package ~/path_to_source_package`
 Analyses the package it receives, and outputs the analysis results in an xml format as a string, on the terminal.
 An example output is shown below:
 ```
@@ -124,13 +124,13 @@ Done.
 
 ### 3- Check
 if you have install the project with pip;
-`check --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
+`spdx-coverage-check --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
 This Scans the pdx document and analyses the source package to determine how compatible they are.
 
 
 ### 4- Grader
 if you have install the project with pip;
-`grade --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
+`spdx-coverage-grade --spdx ~/path_to_spdx_document --package ~/path_to_source_package --lines 0 --percent 0`
 This runs the package analysis and the spdx file scan commands described above, but does not output any other result appart from the license coverage grade attributed to the package; as show below:
 ```
 The package matches the spdx file by 0.0, the lowest permitted value is: 0
@@ -140,3 +140,4 @@ GRADE:  F with 0.0 %  pass for files_with_any_kind_of_license_infos
 
 
 ```
+
