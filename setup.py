@@ -21,9 +21,10 @@ setup(
         'python-Levenshtein'
     ],
     entry_points={
-        'console_scripts': ['scan=cmds:scan',
-                            'analyse=cmds:analyse',
-                            'check=cmds:check',
-                            'grade=cmds:grade'],
+        'console_scripts': ['spdx-coverage-scan=cmds:scan',
+                            'spdx-coverage-analyse=cmds:analyse',
+                            'spdx-coverage-check=cmds:check',
+                            'spdx-coverage-grade=cmds:grade'],
     }
 )
+
