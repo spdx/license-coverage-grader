@@ -1,7 +1,7 @@
 from setuptools import setup
 
 def readme():
-    with open('README.md') as f:
+    with open('.github/README.md') as f:
         return f.read()
 
 setup(
@@ -27,4 +27,3 @@ setup(
                             'spdx-coverage-grade=cmds:grade'],
     }
 )
-
