@@ -5,7 +5,7 @@ from utils import AnalysePackage, ScanSpdx, CheckPackage, GradePackage
 @click.option('--verbose', is_flag=True, help="Will print verbose messages.")
 @click.option('--spdx', multiple=False, default='', help='The spdx file.')
 def scan(verbose, spdx):
-    """Scans an spdx document"""
+    """Scan an spdx document."""
     if verbose:
         click.echo("We are in the verbose mode.")
     click.echo("Scanning the spdx document.")
@@ -19,7 +19,7 @@ def scan(verbose, spdx):
 @click.option('--package', multiple=False, default='', help='The source package.')
 @click.option('--lines', multiple=False, default='', help='The min number of code lines allowed.')
 def analyse(verbose, package, lines):
-    """Analyse a source package"""
+    """Analyse a source package."""
     if verbose:
         click.echo("We are in the verbose mode.")
     click.echo("Analysing the source package.")
@@ -35,7 +35,7 @@ def analyse(verbose, package, lines):
 @click.option('--lines', multiple=False, default=0, help='The min number of code lines allowed.')
 @click.option('--percent', multiple=False, default=0, help='The min matching percentage.')
 def check(verbose, spdx, package, lines, percent):
-    """Checks the compatibility between an spdx document and a source package."""
+    """Check the compatibility between an spdx document and a source package."""
     if verbose:
         click.echo("We are in the verbose mode.")
     click.echo("We are now checking the source package/spdx document compatibility.")
@@ -51,7 +51,7 @@ def check(verbose, spdx, package, lines, percent):
 @click.option('--lines', multiple=False, default=0, help='The min number of code lines allowed.')
 @click.option('--percent', multiple=False, default=0, help='The min matching percentage.')
 def grade(verbose, spdx, package, lines, percent):
-    """Grades a source package"""
+    """Grade a source package."""
     if verbose:
         click.echo("We are in the verbose mode.")
     click.echo("Grading the source package.")
