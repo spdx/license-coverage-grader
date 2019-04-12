@@ -24,7 +24,12 @@ from setuptools import setup
 
 
 def readme():
+<<<<<<< HEAD
     with open('.github/README.md') as f:
+=======
+    """Opens and reads the readme file"""
+    with open('README.md') as f:
+>>>>>>> Adding description to setup.py file
         return f.read()
 
 
