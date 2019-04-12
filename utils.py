@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -29,6 +30,9 @@
 
 #   Generated with license-coverage-grader and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
 #   OR CONDITIONS OF ANY KIND, either express or implied.
+=======
+# SPDX-License-Identifer: Apache-2.0
+>>>>>>> Use SPDX short-form identifiers to communicate license info
 
 
 from __future__ import unicode_literals
