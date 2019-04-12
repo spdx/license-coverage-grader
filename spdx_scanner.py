@@ -1,5 +1,5 @@
-# Copyright (c) 2017 SPDX. All rights reserved.
-# https://spdx.org/ and https://github.com/spdx/license-coverage-grader/
+# Copyright (c) 2017 Nuvadga Christian. All rights reserved.
+# https://github.com/spdx/license-coverage-grader/
 # The License-Coverage-Grader software is licensed under the Apache License version 2.0.
 # Data generated with license-coverage-grader require an acknowledgment.
 # license-coverage-grader is a trademark of The Software Package Data Exchange(SPDX).
@@ -127,7 +127,7 @@ def diff_spdx(spdxfiles, totfiles, wr):
     print(t)
 
     if wr:
-        # Sanitize windrivel output which drops '/'
+        # Sanitize wr output which drops '/'
         # from the middle of the file path
         #
         # Are there any functional tools out there?
@@ -197,7 +197,7 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--sourcefiles", type=int, default=0,
                     help="Number of files in the source")
     parser.add_argument("-w", "--wr", action='store_true',
-                    help="Sanitize windrivel filenames")
+                    help="Sanitize wr filenames")
 
     args = parser.parse_args()
 

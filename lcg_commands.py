@@ -1,6 +1,6 @@
 
-# Copyright (c) 2017 SPDX. All rights reserved.
-# https://spdx.org/ and https://github.com/spdx/license-coverage-grader/
+# Copyright (c) 2017 Nuvadga Christian. All rights reserved.
+# https://github.com/spdx/license-coverage-grader/
 # The License-Coverage-Grader software is licensed under the Apache License version 2.0.
 # Data generated with license-coverage-grader require an acknowledgment.
 # license-coverage-grader is a trademark of The Software Package Data Exchange(SPDX).
