@@ -14,6 +14,7 @@ import csv
 
 class spdxdata(object):
     def __init__(self, fname):
+    	"""Initializes the spdx data variables"""
         self.fname = fname
         self.parser = ""
         self.filerefs = {}
@@ -22,6 +23,7 @@ class spdxdata(object):
 
 class filedata(object):
     def __init__(self, fname, info=None, concluded=None):
+    	"""Initializes the file data variables"""
         self.fname = fname
         self.licinfo = []
         self.licconcluded = []
@@ -34,6 +36,7 @@ class filedata(object):
 
 
 def read_spdx(filename, spdx):
+	"""Reading the SPDX file and differentiating with respect to their key"""
     with open(filename) as f:
         fname = None
         for line in f.readlines():
@@ -74,6 +77,7 @@ def read_spdx(filename, spdx):
 
 
 def read_csv(filename, spdx):
+	"""Reading the CSV file and adding license to it if not present"""
 
     spdx.parser = 'LID'
 
@@ -94,8 +98,13 @@ def read_csv(filename, spdx):
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
 
+<<<<<<< HEAD
 
 def diff_spdx(spdxfiles, totfiles, wr):
+=======
+def diff_spdx(spdxfiles, totfiles, windcrap):
+	"""Differentiating spdxfiles , totfiles and sanitizing the windrivel output"""
+>>>>>>> 2dd835c2221de1e76fbfe37956c2654e2e431ad6
 
     spdx = {}
     files = set()
