@@ -1,3 +1,6 @@
+# SPDX-License-Identifer: Apache-2.0
+
+
 #!/usr/bin/python
 
 from __future__ import print_function
@@ -8,12 +11,14 @@ import copy
 import sys
 import csv
 
+
 class spdxdata(object):
     def __init__(self, fname):
         self.fname = fname
         self.parser = ""
         self.filerefs = {}
         self.files = set()
+
 
 class filedata(object):
     def __init__(self, fname, info=None, concluded=None):
@@ -26,6 +31,8 @@ class filedata(object):
             self.licconcluded.append(concluded)
 
 # Trivial SPDX scan
+
+
 def read_spdx(filename, spdx):
     with open(filename) as f:
         fname = None
@@ -43,7 +50,8 @@ def read_spdx(filename, spdx):
                 if (fname):
                     spdx.filerefs[fname] = fdata
 
-                fname = parts[1].strip().split('/', 1)[1].strip().replace(",", "%2C")
+                fname = parts[1].strip().split(
+                    '/', 1)[1].strip().replace(",", "%2C")
                 fdata = filedata(fname)
 
             if key == 'LicenseConcluded':
@@ -63,6 +71,8 @@ def read_spdx(filename, spdx):
             spdx.filerefs[fname] = fdata
 
 # LID CSV scan
+
+
 def read_csv(filename, spdx):
 
     spdx.parser = 'LID'
@@ -84,12 +94,13 @@ def read_csv(filename, spdx):
                 fd.licinfo.append(lic)
             spdx.filerefs[fn] = fd
 
-def diff_spdx(spdxfiles, totfiles, windcrap):
+
+def diff_spdx(spdxfiles, totfiles, wr):
 
     spdx = {}
     files = set()
 
-    t = "Tool %d" %totfiles
+    t = "Tool %d" % totfiles
     for spf in spdxfiles:
         s = spdxdata(spf)
 
@@ -101,20 +112,20 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
         s.files = set(sorted(s.filerefs.keys()))
         files = files | s.files
         spdx[spf] = s
-        t += "," + s.parser + ":%d" %(len(s.files))
+        t += "," + s.parser + ":%d" % (len(s.files))
 
     t += ",Match"
 
     print(t)
 
-    if windcrap:
-        # Sanitize windrivel output which drops '/'
+    if wr:
+        # Sanitize wr output which drops '/'
         # from the middle of the file path
         #
         # Are there any functional tools out there?
         #
         # This certainly can be done smarter, but WTF
-        sanitize = { }
+        sanitize = {}
         for src in sorted(files):
             if src in sanitize:
                 continue
@@ -129,7 +140,7 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                 if len(ops) != 3:
                     continue
 
-                #arch/arc/cpu/arc700/u-boot.lds -> arch/arc/cpu/arc700u-boot.lds
+                # arch/arc/cpu/arc700/u-boot.lds -> arch/arc/cpu/arc700u-boot.lds
                 #[('equal', 0, 19, 0, 19), ('delete', 19, 20, 19, 19), ('equal', 20, 30, 19, 29)]
                 if ops[0][0] != 'equal' or ops[1][0] != 'delete' or ops[2][0] != 'equal':
                     continue
@@ -158,8 +169,10 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
         lics = None
         match = "Y"
         for spf in spdxfiles:
-            l = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licinfo
-            lico = spdx[spf].filerefs.get(src, filedata(src, 'NOTSCANNED', 'NOTSCANNED')).licconcluded
+            l = spdx[spf].filerefs.get(src, filedata(
+                src, 'NOTSCANNED', 'NOTSCANNED')).licinfo
+            lico = spdx[spf].filerefs.get(src, filedata(
+                src, 'NOTSCANNED', 'NOTSCANNED')).licconcluded
             if not lics:
                 lics = copy.copy(l)
             elif set(lics) != set(l):
@@ -168,17 +181,18 @@ def diff_spdx(spdxfiles, totfiles, windcrap):
                 lics = copy.copy(lico)
             elif set(lics) != set(lico):
                 match = "N"
-            info = "," + " ".join(map(str,l)) + "," + " ".join(map(str,lico))
+            info = "," + " ".join(map(str, l)) + "," + " ".join(map(str, lico))
         print(src + info)
 
+
 if __name__ == '__main__':
-    parser = ArgumentParser(description = 'Diff of two or more SPDX files')
-    parser.add_argument('filenames', metavar = 'file', nargs = '+',
-                        help = 'list of source URIs, minimum 2')
+    parser = ArgumentParser(description='Diff of two or more SPDX files')
+    parser.add_argument('filenames', metavar='file', nargs='+',
+                        help='list of source URIs, minimum 2')
     parser.add_argument("-s", "--sourcefiles", type=int, default=0,
-                    help="Number of files in the source")
-    parser.add_argument("-w", "--windcrap", action='store_true',
-                    help="Sanitize windrivel filenames")
+                        help="Number of files in the source")
+    parser.add_argument("-w", "--wr", action='store_true',
+                        help="Sanitize wr filenames")
 
     args = parser.parse_args()
 
@@ -186,4 +200,4 @@ if __name__ == '__main__':
         print("Not enough SPDX files\n")
         sys.exit(1)
 
-    diff_spdx(args.filenames, args.sourcefiles, args.windcrap)
+    diff_spdx(args.filenames, args.sourcefiles, args.wr)
