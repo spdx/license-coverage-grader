@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ekongobie/license-coverage-grader.svg?branch=master)](https://travis-ci.org/ekongobie/license-coverage-grader)
+
 # license-coverage-grader
 This is a tool which take an SPDX document and pointer to the original source files, and determine a "grade" score to quantify how complete the licensing information is at the file level for the code represented by the SPDX document.
 
@@ -140,4 +142,3 @@ GRADE:  F with 0.0 %  pass for files_with_any_kind_of_license_infos
 
 
 ```
-
